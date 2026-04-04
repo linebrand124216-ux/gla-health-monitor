@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#0a0f0a">
+<title>GLA Health</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f0a;
+  --bg2:#111811;
+  --bg3:#161e16;
+  --card:#1a211a;
+  --card2:#1f281f;
+  --border:#2a352a;
+  --border2:#223022;
+  --neon:#00ff41;
+  --neon2:#00cc33;
+  --neon-dim:rgba(0,255,65,0.12);
+  --neon-glow:0 0 10px rgba(0,255,65,0.4);
+  --white:#ffffff;
+  --g1:#e0e0e0;
+  --g2:#9a9a9a;
+  --g3:#555555;
+  --g4:#2a2a2a;
+  --red:#ff4444;
+  --red-dim:rgba(255,68,68,0.15);
+  --amb:#ff9500;
+  --amb-dim:rgba(255,149,0,0.15);
+  --blue:#4fc3f7;
+  --purple:#ce93d8;
+  --font:'Inter',sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:var(--font);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── LOADING ── */
+#load{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:999;transition:opacity 0.6s}
+#load.out{opacity:0;pointer-events:none}
+.load-brand{display:flex;align-items:center;gap:10px}
+.load-icon{color:var(--neon);font-size:24px}
+.load-name{font-size:26px;font-weight:700;letter-spacing:1px}
+.load-name span{color:var(--neon)}
+.load-sub{font-size:11px;letter-spacing:3px;color:var(--g2);font-weight:500}
+.load-bar{width:140px;height:2px;background:var(--g4);border-radius:1px;overflow:hidden;margin-top:4px}
+.load-fill{height:100%;background:var(--neon);border-radius:1px;width:0;animation:lf 1.4s ease forwards;box-shadow:var(--neon-glow)}
+@keyframes lf{to{width:100%}}
+
+/* ── LAYOUT ── */
+.app{display:none;height:100dvh;flex-direction:column;max-width:430px;margin:0 auto;background:var(--bg)}
+.app.on{display:flex}
+.auth-wrap{display:none;height:100dvh;overflow-y:auto;max-width:430px;margin:0 auto;background:var(--bg)}
+.auth-wrap.on{display:block;animation:fin 0.3s ease}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── AUTH ── */
+.auth-top{padding:60px 28px 32px;text-align:center}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px}
+.auth-logo-icon{color:var(--neon);font-size:20px}
+.auth-logo-text{font-size:24px;font-weight:700}
+.auth-logo-text span{color:var(--neon)}
+.auth-tagline{font-size:11px;letter-spacing:2px;color:var(--g2);font-weight:500;text-transform:uppercase}
+.auth-tabs{display:flex;background:var(--card);border-radius:10px;margin:0 28px 24px;padding:4px;border:1px solid var(--border)}
+.auth-tab{flex:1;padding:10px;text-align:center;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--g2)}
+.auth-tab.act{background:var(--bg3);color:var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.auth-body{padding:0 28px 40px}
+.fg{margin-bottom:14px}
+.fi-wrap{position:relative}
+.fi-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g3);font-size:14px;pointer-events:none}
+.fi{width:100%;padding:13px 14px 13px 40px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--white);font-family:var(--font);font-size:14px;outline:none;-webkit-appearance:none;transition:border-color 0.2s}
+.fi:focus{border-color:var(--neon)}
+.fi::placeholder{color:var(--g3)}
+.fi-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--g3);cursor:pointer;font-size:14px}
+.auth-btn{width:100%;padding:14px;border-radius:10px;background:var(--neon);color:var(--bg);border:none;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:transform 0.1s,opacity 0.2s;box-shadow:0 0 20px rgba(0,255,65,0.25);-webkit-tap-highlight-color:transparent}
+.auth-btn:active{transform:scale(0.97)}
+.auth-btn:disabled{opacity:0.4;pointer-events:none}
+.auth-forgot{text-align:center;margin-top:14px}
+.auth-forgot a{font-size:12px;color:var(--g2);cursor:pointer}
+.auth-divider{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--g3);margin:16px 0;font-weight:500}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.demo-btn{width:100%;padding:14px;border-radius:10px;background:transparent;color:var(--neon);border:1px solid var(--neon);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px}
+.demo-btn:active{background:var(--neon-dim)}
+.demo-note{text-align:center;font-size:11px;color:var(--g3);margin-top:8px}
+.auth-footer{text-align:center;font-size:11px;color:var(--g3);padding:16px 0 28px}
+.emsg{font-size:11px;color:var(--red);margin-top:5px;display:none;padding-left:2px}
+.emsg.show{display:block}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(0,0,0,0.2);border-top-color:var(--bg);animation:sp 0.7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── TOP BAR ── */
+.topbar{background:var(--bg);padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:20px;font-weight:700;color:var(--white)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-dot{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:var(--neon-glow);animation:bl 2s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── ANIMAL PILLS ── */
+.pill-bar{padding:4px 16px 10px;display:flex;gap:8px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.pill-bar::-webkit-scrollbar{display:none}
+.pill{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;flex-shrink:0;transition:all 0.2s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.pill.act{border-color:var(--neon);background:var(--neon-dim)}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 4px var(--neon);flex-shrink:0}
+.pill-dot.w{background:var(--amb);box-shadow:0 0 4px var(--amb)}
+.pill-dot.c{background:var(--red);box-shadow:0 0 4px var(--red)}
+.pill-icon{font-size:14px}
+.pill-name{font-size:12px;font-weight:600;color:var(--g1)}
+.pill.act .pill-name{color:var(--neon)}
+
+/* ── SCROLL AREA ── */
+.scroll{flex:1;min-height:0;overflow-y:auto;padding:0 16px 80px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── ANIMAL HEADER ── */
+.animal-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 0 14px}
+.animal-hdr-left{display:flex;align-items:center;gap:10px}
+.animal-icon-big{font-size:36px}
+.animal-name{font-size:20px;font-weight:700;color:var(--white)}
+.animal-sub{font-size:11px;color:var(--g2);margin-top:1px}
+.health-badge{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.health-badge.ok{background:var(--neon-dim);color:var(--neon);border:1px solid rgba(0,255,65,0.2)}
+.health-badge.warn{background:var(--amb-dim);color:var(--amb);border:1px solid rgba(255,149,0,0.2)}
+.health-badge.crit{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,68,0.2)}
+.health-badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* ── SENSOR CARDS ── */
+.sensor-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.sensor-card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--border);position:relative;overflow:hidden}
+.sensor-card.W{border-color:rgba(255,149,0,0.4);background:rgba(255,149,0,0.06)}
+.sensor-card.C{border-color:rgba(255,68,68,0.4);background:rgba(255,68,68,0.06)}
+.sc-icon{font-size:14px;margin-bottom:6px;display:block}
+.sc-label{font-size:9px;font-weight:600;letter-spacing:1px;color:var(--g2);text-transform:uppercase;margin-bottom:4px}
+.sc-val{font-size:22px;font-weight:700;color:var(--white);line-height:1;margin-bottom:2px}
+.sc-val.temp{color:var(--amb)}
+.sc-val.hr{color:var(--red)}
+.sc-val.spo2{color:var(--blue)}
+.sc-unit{font-size:11px;font-weight:500;color:var(--g2)}
+.sc-sub{font-size:9px;color:var(--g2);margin-top:3px}
+
+/* ── BATTERY + MOVEMENT ROW ── */
+.batt-motion-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.bm-card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--border)}
+.bm-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bm-label{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--g2);text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.bm-val{font-size:14px;font-weight:700;color:var(--white)}
+.bm-bar{height:4px;background:var(--g4);border-radius:2px;overflow:hidden}
+.bm-fill{height:100%;border-radius:2px;background:var(--neon);transition:width 0.5s;box-shadow:0 0 4px var(--neon)}
+.bm-fill.lo{background:var(--red);box-shadow:0 0 4px var(--red)}
+.motion-bars{display:flex;gap:3px;align-items:flex-end;height:28px}
+.mbar{flex:1;border-radius:2px;background:var(--neon);transition:height 0.3s;min-height:2px;box-shadow:0 0 2px rgba(0,255,65,0.3)}
+
+/* ── INFO CARD ── */
+.info-card{background:var(--card);border-radius:12px;padding:13px;border:1px solid var(--border);margin-bottom:10px}
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0}
+.info-row+.info-row{border-top:1px solid var(--border)}
+.info-label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--g2)}
+.info-icon{font-size:12px}
+.info-val{font-size:12px;font-weight:600;color:var(--white)}
+.info-val.neon{color:var(--neon)}
+.info-val.blue{color:var(--blue)}
+
+/* ── NO DEVICE ── */
+.no-device{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 28px;text-align:center;min-height:50vh}
+.no-device-icon{font-size:52px;opacity:0.3;margin-bottom:16px}
+.no-device-title{font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px}
+.no-device-sub{font-size:13px;color:var(--g2);line-height:1.7;margin-bottom:24px}
+.no-device-btn{padding:13px 24px;border-radius:10px;background:var(--neon);color:var(--bg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer}
+
+/* ── ANALYTICS ── */
+.analytics-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-top:4px}
+.analytics-title{font-size:16px;font-weight:700;color:var(--white)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border)}
+.stat-icon{font-size:16px;margin-bottom:8px}
+.stat-val{font-size:22px;font-weight:700;margin-bottom:2px}
+.stat-val.temp{color:var(--amb)}
+.stat-val.hr{color:var(--red)}
+.stat-val.spo2{color:var(--blue)}
+.stat-val.good{color:var(--neon)}
+.stat-label{font-size:10px;color:var(--g2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.stat-sub{font-size:10px;color:var(--g3);margin-top:2px}
+.chart-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:10px}
+.chart-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:12px}
+.chart-wrap{height:140px;position:relative}
+.health-events{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:10px}
+.he-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:10px}
+.he-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g1);padding:4px 0}
+.he-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);flex-shrink:0}
+.he-dot.w{background:var(--amb)}
+.weekly-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:10px}
+.weekly-bars{display:flex;gap:6px;align-items:flex-end;height:60px;margin-top:10px}
+.wbar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wbar{width:100%;border-radius:3px;background:var(--neon);transition:height 0.3s;box-shadow:0 0 4px rgba(0,255,65,0.2)}
+.wbar.today{background:var(--neon);box-shadow:var(--neon-glow)}
+.wbar.low{background:var(--g4)}
+.wday{font-size:9px;color:var(--g3);font-weight:500}
+
+/* ── HERD ── */
+.herd-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.hstat{background:var(--card);border-radius:10px;padding:10px 6px;text-align:center;border:1px solid var(--border)}
+.hstat-val{font-size:18px;font-weight:700}
+.hstat-val.ok{color:var(--neon)}
+.hstat-val.warn{color:var(--amb)}
+.hstat-val.crit{color:var(--red)}
+.hstat-val.total{color:var(--white)}
+.hstat-lbl{font-size:8px;font-weight:600;letter-spacing:0.5px;color:var(--g3);text-transform:uppercase;margin-top:2px}
+.animal-list{display:flex;flex-direction:column;gap:8px}
+.animal-row{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color 0.2s}
+.animal-row:active{border-color:var(--neon)}
+.ar-icon{font-size:30px;flex-shrink:0}
+.ar-info{flex:1}
+.ar-name{font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px}
+.ar-sub{font-size:10px;color:var(--g2);letter-spacing:0.5px}
+.ar-vitals{text-align:right}
+.ar-temp{font-size:13px;font-weight:700;color:var(--amb)}
+.ar-hr{font-size:11px;color:var(--red);margin-top:1px}
+.ar-spo2{font-size:11px;color:var(--blue);margin-top:1px}
+.ar-arrow{color:var(--g3);font-size:14px;flex-shrink:0}
+.ar-dot{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 5px var(--neon);flex-shrink:0}
+.ar-dot.w{background:var(--amb);box-shadow:0 0 5px var(--amb)}
+.ar-dot.c{background:var(--red);box-shadow:0 0 5px var(--red)}
+
+/* ── SETTINGS ── */
+.settings-section{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
+.settings-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--g3);text-transform:uppercase;padding:10px 14px 6px}
+.settings-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--border2)}
+.settings-row:first-of-type{border-top:none}
+.sr-icon{font-size:16px;flex-shrink:0;width:20px;text-align:center}
+.sr-info{flex:1}
+.sr-label{font-size:13px;font-weight:500;color:var(--white)}
+.sr-sub{font-size:11px;color:var(--g3);margin-top:1px}
+.sr-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.5px}
+.sr-badge.demo{background:var(--neon-dim);color:var(--neon);border:1px solid rgba(0,255,65,0.2)}
+.sr-badge.live{background:rgba(0,255,65,0.15);color:var(--neon)}
+.sr-badge.blue{background:rgba(79,195,247,0.15);color:var(--blue)}
+.account-hdr{display:flex;align-items:center;gap:12px;padding:14px}
+.account-avatar{width:44px;height:44px;border-radius:50%;background:var(--neon-dim);border:2px solid var(--neon);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.account-name{font-size:15px;font-weight:700;color:var(--white)}
+.account-email{font-size:11px;color:var(--g2);margin-top:2px}
+.exit-btn{width:100%;padding:14px;border-radius:10px;background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.exit-btn:active{background:rgba(255,68,68,0.2)}
+
+/* ── DEVICE ADD FORM ── */
+.device-form{padding:14px}
+.device-form-title{font-size:12px;color:var(--g2);margin-bottom:12px;line-height:1.6}
+.dev-input-row{display:flex;gap:7px;margin-bottom:10px}
+.dev-fi{flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--white);font-family:var(--font);font-size:14px;outline:none;text-transform:uppercase;transition:border-color 0.2s}
+.dev-fi:focus{border-color:var(--neon)}
+.dev-fi::placeholder{color:var(--g3);text-transform:none}
+.gen-btn{padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--neon);font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;font-family:var(--font)}
+.link-btn{width:100%;padding:13px;border-radius:10px;background:var(--neon);color:var(--bg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer}
+
+/* ── BOTTOM NAV ── */
+.bnav{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 0 16px;display:flex;justify-content:space-around}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:0.4;transition:opacity 0.2s;padding:4px 20px;-webkit-tap-highlight-color:transparent;min-width:60px}
+.nav-item.on{opacity:1}
+.nav-icon{font-size:20px;position:relative}
+.nav-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.on .nav-icon svg{stroke:var(--neon)}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:0.3px;color:var(--g2)}
+.nav-item.on .nav-label{color:var(--neon)}
+
+/* ── OVERLAYS ── */
+.covl{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:200;background:rgba(255,68,68,0.08)}
+.covl.on{animation:cf 0.8s ease-in-out infinite}
+@keyframes cf{0%,100%{opacity:0}50%{opacity:1}}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--card);color:var(--white);padding:10px 18px;border-radius:40px;font-size:12px;font-weight:600;z-index:600;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);max-width:90vw;text-align:center;border:1px solid var(--border);white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--neon);color:var(--neon)}
+.toast.err{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+
+<div id="load">
+  <div class="load-brand">
+    <div class="load-icon">⚡</div>
+    <div class="load-name">GLA <span>Health</span></div>
+  </div>
+  <div class="load-sub">LIVESTOCK MONITOR</div>
+  <div class="load-bar"><div class="load-fill"></div></div>
+</div>
+<div class="covl" id="covl"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ══════════ AUTH ══════════ -->
+<div class="auth-wrap on" id="pg-auth">
+  <div class="auth-top">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">⚡</div>
+      <div class="auth-logo-text">GLA <span>Health</span></div>
+    </div>
+    <div class="auth-tagline">Livestock Monitor</div>
+  </div>
+
+  <div class="auth-tabs">
+    <div class="auth-tab act" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</div>
+    <div class="auth-tab" id="tab-create" onclick="switchAuthTab('create')">Create Account</div>
+  </div>
+
+  <!-- SIGN IN FORM -->
+  <div class="auth-body" id="form-signin">
+    <div class="fg">
+      <div class="fi-wrap">
+        <span class="fi-icon">✉</span>
+        <input class="fi" id="li-email" type="email" placeholder="Email address" autocomplete="email">
+      </div>
+    </div>
+    <div class="fg">
+      <div class="fi-wrap">
+        <span class="fi-icon">🔒</span>
+        <input class="fi" id="li-pass" type="password" placeholder="Password" autocomplete="current-password">
+        <span class="fi-eye" onclick="togglePass('li-pass')">👁</span>
+      </div>
+    </div>
+    <button class="auth-btn" id="liBtn" onclick="doLogin()">Sign In</button>
+    <div class="emsg show" id="li-err" style="text-align:center;margin-top:8px"></div>
+    <div class="auth-forgot"><a onclick="doForgot()">Forgot password?</a></div>
+    <div class="auth-divider">or</div>
+    <button class="demo-btn" onclick="enterDemo()">⚡ Try Demo Mode</button>
+    <div class="demo-note">Simulated livestock data · No account needed</div>
+    <div class="auth-footer">GLA Health © 2025</div>
+  </div>
+
+  <!-- CREATE ACCOUNT FORM -->
+  <div class="auth-body" id="form-create" style="display:none">
+    <div class="fg"><div class="fi-wrap"><span class="fi-icon">👤</span><input class="fi" id="su-name" type="text" placeholder="Farm / Owner name" autocomplete="name"></div></div>
+    <div class="fg"><div class="fi-wrap"><span class="fi-icon">✉</span><input class="fi" id="su-email" type="email" placeholder="Email address" autocomplete="email"></div></div>
+    <div class="fg"><div class="fi-wrap"><span class="fi-icon">📍</span><input class="fi" id="su-loc" type="text" placeholder="Farm location"></div></div>
+    <div class="fg"><div class="fi-wrap"><span class="fi-icon">🔒</span><input class="fi" id="su-pass" type="password" placeholder="Password (min 8 chars)" autocomplete="new-password"></div></div>
+    <button class="auth-btn" id="suBtn" onclick="doSignup()">Create Account</button>
+    <div class="emsg show" id="su-err" style="text-align:center;margin-top:8px"></div>
+    <div class="auth-divider">or</div>
+    <button class="demo-btn" onclick="enterDemo()">⚡ Try Demo Mode</button>
+    <div class="demo-note">Simulated livestock data · No account needed</div>
+    <div class="auth-footer">GLA Health © 2025</div>
+  </div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
+<div class="app" id="pg-app">
+
+  <!-- TOPBAR -->
+  <div class="topbar" id="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="topbar-dot" id="topbar-dot"></div>
+    </div>
+  </div>
+
+  <!-- ANIMAL PILLS (dashboard only) -->
+  <div class="pill-bar" id="pill-bar" style="display:none"></div>
+
+  <!-- VIEWS -->
+  <div class="scroll" id="view-dashboard" style="display:none"></div>
+  <div class="scroll" id="view-analytics" style="display:none"></div>
+  <div class="scroll" id="view-herd" style="display:none"></div>
+  <div class="scroll" id="view-settings" style="display:none"></div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="nav-item on" id="nav-dashboard" onclick="showView('dashboard')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="nav-label">Dashboard</div>
+    </div>
+    <div class="nav-item" id="nav-analytics" onclick="showView('analytics')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="nav-label">Analytics</div>
+    </div>
+    <div class="nav-item" id="nav-herd" onclick="showView('herd')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+      <div class="nav-label">Herd</div>
+    </div>
+    <div class="nav-item" id="nav-settings" onclick="showView('settings')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="nav-label">Settings</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCo-69r1IQsdTC4DP8xQTB7UeJiejtLD-0",
+  authDomain: "gla-health-monitor.firebaseapp.com",
+  projectId: "gla-health-monitor",
+  storageBucket: "gla-health-monitor.firebasestorage.app",
+  messagingSenderId: "655374351980",
+  appId: "1:655374351980:web:681714d0ed1897f504a249"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ── DATA ──────────────────────────────────────────
+const DEMO_ANIMALS = [
+  {id:'A001',name:'Bessie', species:'Cattle',tag:'TAG 001',icon:'🐄',status:'ok',  temp:38.4,hr:74, spo2:96.1,batt:61,motion:29,ax:0.12,ay:0.08,az:0.95},
+  {id:'A002',name:'Nanny',  species:'Goat',  tag:'TAG 003',icon:'🐐',status:'warn',temp:40.0,hr:88, spo2:94.2,batt:78,motion:65,ax:0.45,ay:0.31,az:0.88},
+  {id:'A003',name:'Max',    species:'Horse', tag:'TAG 007',icon:'🐎',status:'ok',  temp:37.9,hr:33, spo2:98.4,batt:92,motion:18,ax:0.08,ay:0.05,az:0.97},
+];
+const RANGES = {
+  Cattle:{temp:[38.0,39.5],hr:[60,80], spo2:95},
+  Goat:  {temp:[38.5,40.0],hr:[70,90], spo2:95},
+  Sheep: {temp:[38.5,40.0],hr:[70,80], spo2:95},
+  Pig:   {temp:[38.0,39.5],hr:[60,80], spo2:94},
+  Horse: {temp:[37.5,38.5],hr:[28,44], spo2:95},
+};
+
+let isDemo=false, userProfile=null, hasDevice=false;
+let currentAnimal=DEMO_ANIMALS[0], simTimer=null, batt=82;
+let tempChart=null, weekChart=null;
+const MONTHS=['Jan','Mar','May','Jul','Sep','Nov'];
+
+// ── AUTH STATE ────────────────────────────────────
+onAuthStateChanged(auth, async (user) => {
+  setTimeout(()=>document.getElementById('load').classList.add('out'), 1600);
+  if (user && !isDemo) {
+    await loadProfile(user.uid);
+    launchApp(false);
+  } else if (!isDemo) {
+    showAuth();
+  }
+});
+
+async function loadProfile(uid) {
+  try {
+    const snap = await getDoc(doc(db,'farms',uid));
+    if (snap.exists()) {
+      userProfile = snap.data();
+      hasDevice = !!(userProfile.deviceId && userProfile.deviceId !== '');
+    }
+  } catch(e) {}
+}
+
+function showAuth() {
+  document.getElementById('pg-auth').classList.add('on');
+  document.getElementById('pg-app').classList.remove('on');
+}
+
+function launchApp(demo) {
+  isDemo = demo;
+  document.getElementById('pg-auth').classList.remove('on');
+  document.getElementById('pg-app').classList.add('on');
+  showView('dashboard');
+  if (demo || hasDevice) startSim();
+}
+
+// ── AUTH FUNCTIONS ────────────────────────────────
+window.switchAuthTab = function(tab) {
+  document.getElementById('tab-signin').classList.toggle('act', tab==='signin');
+  document.getElementById('tab-create').classList.toggle('act', tab==='create');
+  document.getElementById('form-signin').style.display = tab==='signin'?'block':'none';
+  document.getElementById('form-create').style.display = tab==='create'?'block':'none';
+};
+
+window.doLogin = async function() {
+  const email=document.getElementById('li-email').value.trim();
+  const pass=document.getElementById('li-pass').value;
+  const errEl=document.getElementById('li-err');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Please enter email and password';errEl.classList.add('show');return;}
+  const btn=document.getElementById('liBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Signing in...';
+  try {
+    await signInWithEmailAndPassword(auth,email,pass);
+    t('✅ Welcome back!','ok');
+  } catch(e) {
+    errEl.textContent=fe(e.code);errEl.classList.add('show');
+    btn.disabled=false;btn.textContent='Sign In';
+  }
+};
+
+window.doSignup = async function() {
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const loc=document.getElementById('su-loc').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  const errEl=document.getElementById('su-err');
+  errEl.textContent='';
+  if(!name||!email||!pass){errEl.textContent='Please fill in all fields';errEl.classList.add('show');return;}
+  if(pass.length<8){errEl.textContent='Password must be at least 8 characters';errEl.classList.add('show');return;}
+  const btn=document.getElementById('suBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Creating...';
+  try {
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await updateProfile(cred.user,{displayName:name});
+    await setDoc(doc(db,'farms',cred.user.uid),{name,email,location:loc,deviceId:'',createdAt:serverTimestamp()});
+    t('✅ Account created!','ok');
+  } catch(e) {
+    errEl.textContent=fe(e.code);errEl.classList.add('show');
+    btn.disabled=false;btn.textContent='Create Account';
+  }
+};
+
+window.doForgot = async function() {
+  const email=document.getElementById('li-email').value.trim();
+  if(!email){t('Enter your email first');return;}
+  try{await sendPasswordResetEmail(auth,email);t('📧 Reset email sent','ok');}
+  catch(e){t('Error: '+fe(e.code),'err');}
+};
+
+window.enterDemo = function() {
+  isDemo=true;
+  launchApp(true);
+  t('⚡ Demo mode active','ok');
+};
+
+window.doLogout = async function() {
+  if(simTimer){clearInterval(simTimer);simTimer=null;}
+  isDemo=false;
+  if(auth.currentUser) await signOut(auth);
+  showAuth();
+  t('Signed out');
+};
+
+window.togglePass = function(id) {
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+};
+
+// ── VIEW SWITCHING ────────────────────────────────
+window.showView = function(view) {
+  ['dashboard','analytics','herd','settings'].forEach(v=>{
+    document.getElementById('view-'+v).style.display='none';
+    document.getElementById('nav-'+v).classList.remove('on');
+  });
+  document.getElementById('view-'+view).style.display='block';
+  document.getElementById('nav-'+view).classList.add('on');
+  document.getElementById('pill-bar').style.display = view==='dashboard' ? 'flex' : 'none';
+
+  const titles={dashboard:'Dashboard',analytics:'Analytics',herd:'Herd',settings:'Settings'};
+  document.getElementById('topbar-title').textContent = titles[view];
+
+  if(view==='dashboard') renderDashboard();
+  else if(view==='analytics') renderAnalytics();
+  else if(view==='herd') renderHerd();
+  else if(view==='settings') renderSettings();
+};
+
+// ── DASHBOARD ─────────────────────────────────────
+function renderDashboard() {
+  const animals = isDemo ? DEMO_ANIMALS : (hasDevice ? DEMO_ANIMALS : []);
+  const bar = document.getElementById('pill-bar');
+  bar.innerHTML = '';
+  animals.forEach((a,i)=>{
+    const p=document.createElement('div');
+    p.className='pill'+(currentAnimal.id===a.id?' act':'');
+    p.innerHTML=`<span class="pill-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></span><span class="pill-icon">${a.icon}</span><span class="pill-name">${a.name}</span>`;
+    p.onclick=()=>{currentAnimal=a;renderDashboard();};
+    bar.appendChild(p);
+  });
+
+  const view=document.getElementById('view-dashboard');
+  if(!isDemo && !hasDevice) {
+    view.innerHTML=`<div class="no-device"><div class="no-device-icon">📡</div><div class="no-device-title">No device linked yet</div><div class="no-device-sub">Link your GLA ear tag collar in Settings to start monitoring your herd.</div><button class="no-device-btn" onclick="showView('settings')">⚙️ Go to Settings</button></div>`;
+    return;
+  }
+  const a=currentAnimal;
+  const r=RANGES[a.species]||RANGES.Cattle;
+  const tSt=a.temp>r.temp[1]?'C':a.temp<r.temp[0]?'C':'';
+  const hSt=a.hr>r.hr[1]+10?'C':a.hr>r.hr[1]?'W':'';
+  const sSt=a.spo2<r.spo2?'W':'';
+  const wBadge=a.status==='warn'?'warn':a.status==='crit'?'crit':'ok';
+
+  view.innerHTML=`
+    <div class="animal-hdr">
+      <div class="animal-hdr-left">
+        <div class="animal-icon-big">${a.icon}</div>
+        <div>
+          <div class="animal-name">${a.name}</div>
+          <div class="animal-sub">TAG ${a.tag} · ${a.species}</div>
+        </div>
+      </div>
+      <div class="health-badge ${wBadge}">
+        <div class="health-badge-dot"></div>
+        ${a.status==='warn'?'Warning':a.status==='crit'?'Critical':'Healthy'}
+      </div>
+    </div>
+    <div class="sensor-row">
+      <div class="sensor-card ${tSt}">
+        <span class="sc-icon">🌡️</span>
+        <div class="sc-label">Body Temp</div>
+        <div class="sc-val temp" id="sv-temp">${a.temp.toFixed(1)}<span class="sc-unit">°C</span></div>
+        <div class="sc-sub">Temperature</div>
+      </div>
+      <div class="sensor-card ${hSt}">
+        <span class="sc-icon">❤️</span>
+        <div class="sc-label">Beats/min</div>
+        <div class="sc-val hr" id="sv-hr">${a.hr}<span class="sc-unit">bpm</span></div>
+        <div class="sc-sub">Heart Rate</div>
+      </div>
+      <div class="sensor-card ${sSt}">
+        <span class="sc-icon">💧</span>
+        <div class="sc-label">Blood Oxygen</div>
+        <div class="sc-val spo2" id="sv-spo2">${a.spo2.toFixed(1)}<span class="sc-unit">%</span></div>
+        <div class="sc-sub">SpO₂</div>
+      </div>
+    </div>
+    <div class="batt-motion-row">
+      <div class="bm-card">
+        <div class="bm-top">
+          <div class="bm-label">🔋 Battery</div>
+          <div class="bm-val" id="sv-batt">${a.batt}%</div>
+        </div>
+        <div class="bm-bar"><div class="bm-fill ${a.batt<20?'lo':''}" id="bm-batt-fill" style="width:${a.batt}%"></div></div>
+      </div>
+      <div class="bm-card">
+        <div class="bm-top">
+          <div class="bm-label">⚡ Movement</div>
+          <div class="bm-val" id="sv-motion">${a.motion}%</div>
+        </div>
+        <div class="motion-bars" id="motion-bars"></div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-label"><span class="info-icon">🕐</span>Last update</div>
+        <div class="info-val" id="sv-time">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="info-icon">📡</span>Signal</div>
+        <div class="info-val blue">ESP32-C3 BLE</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="info-icon">🔄</span>Polling</div>
+        <div class="info-val neon">Every 5s</div>
+      </div>
+    </div>
+  `;
+  buildMotionBars();
+}
+
+function buildMotionBars() {
+  const c=document.getElementById('motion-bars');
+  if(!c)return;
+  c.innerHTML='';
+  for(let i=0;i<12;i++){
+    const b=document.createElement('div');
+    b.className='mbar';
+    b.style.height=Math.round(6+Math.random()*22)+'px';
+    c.appendChild(b);
+  }
+}
+
+function animMotionBars() {
+  document.querySelectorAll('.mbar').forEach(b=>{
+    b.style.height=Math.round(3+Math.random()*25)+'px';
+    b.style.background=Math.random()>0.8?'var(--amb)':'var(--neon)';
+  });
+}
+
+// ── SIMULATION ────────────────────────────────────
+function startSim() {
+  if(simTimer)clearInterval(simTimer);
+  simTimer=setInterval(()=>{
+    DEMO_ANIMALS.forEach(a=>{
+      const r=RANGES[a.species]||RANGES.Cattle;
+      a.temp=+((r.temp[0]+r.temp[1])/2+(Math.random()-0.5)*0.8).toFixed(1);
+      a.hr=Math.round((r.hr[0]+r.hr[1])/2+(Math.random()-0.5)*12);
+      a.spo2=+(95.5+Math.random()*3.5).toFixed(1);
+      a.batt=Math.max(5,a.batt-0.02);
+      a.motion=Math.round(20+Math.random()*60);
+      a.ax=+(Math.random()*0.4).toFixed(2);
+      a.ay=+(Math.random()*0.3).toFixed(2);
+      a.az=+(0.8+Math.random()*0.2).toFixed(2);
+    });
+    // keep Nanny as warning animal for demo
+    DEMO_ANIMALS[1].temp=+(RANGES.Goat.temp[1]+0.5+Math.random()*0.5).toFixed(1);
+    DEMO_ANIMALS[1].status='warn';
+    updateLiveValues();
+    animMotionBars();
+  },3000);
+}
+
+function updateLiveValues() {
+  const a=currentAnimal;
+  const sv=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  sv('sv-temp',a.temp.toFixed(1));
+  sv('sv-hr',a.hr);
+  sv('sv-spo2',a.spo2.toFixed(1));
+  sv('sv-batt',Math.round(a.batt)+'%');
+  sv('sv-motion',a.motion+'%');
+  sv('sv-time',new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  const bf=document.getElementById('bm-batt-fill');
+  if(bf){bf.style.width=Math.round(a.batt)+'%';bf.className='bm-fill'+(a.batt<20?' lo':'');}
+}
+
+// ── ANALYTICS ────────────────────────────────────
+function renderAnalytics() {
+  const a=currentAnimal;
+  const r=RANGES[a.species]||RANGES.Cattle;
+  const avgT=((r.temp[0]+r.temp[1])/2+0.1).toFixed(1);
+  const peakT=(r.temp[1]+0.5).toFixed(1);
+  const avgHR=Math.round((r.hr[0]+r.hr[1])/2);
+  const peakHR=r.hr[1]+8;
+
+  document.getElementById('view-analytics').innerHTML=`
+    <div class="analytics-header">
+      <span style="font-size:22px">${a.icon}</span>
+      <div class="analytics-title">${a.name} — Analytics</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🌡️</div>
+        <div class="stat-val temp">${avgT}°C</div>
+        <div class="stat-label">Avg Temp</div>
+        <div class="stat-sub">Peak ${peakT}°C</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❤️</div>
+        <div class="stat-val hr">${avgHR}</div>
+        <div class="stat-label">Avg HR</div>
+        <div class="stat-sub">Peak ${peakHR} bpm</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💧</div>
+        <div class="stat-val spo2">96.9%</div>
+        <div class="stat-label">Avg SpO₂</div>
+        <div class="stat-sub">Min 95.0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-val good">Good</div>
+        <div class="stat-label">Status</div>
+        <div class="stat-sub">12 month</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Temperature Trend (12 months)</div>
+      <div class="chart-wrap"><canvas id="temp-chart"></canvas></div>
+    </div>
+    <div class="health-events">
+      <div class="he-title">Health Events</div>
+      <div class="he-item"><div class="he-dot"></div>All readings within normal range</div>
+      ${a.status==='warn'?'<div class="he-item"><div class="he-dot w"></div>Elevated temperature detected</div>':''}
+    </div>
+    <div class="weekly-card">
+      <div class="chart-title">Weekly Activity</div>
+      <div class="weekly-bars" id="weekly-bars"></div>
+    </div>
+  `;
+  buildTempChart();
+  buildWeeklyBars();
+}
+
+function buildTempChart() {
+  const ctx=document.getElementById('temp-chart');
+  if(!ctx)return;
+  const r=RANGES[currentAnimal.species]||RANGES.Cattle;
+  const mid=(r.temp[0]+r.temp[1])/2;
+  const data=MONTHS.map(()=>+(mid+(Math.random()-0.5)*1.2).toFixed(1));
+  if(tempChart){tempChart.destroy();tempChart=null;}
+  tempChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:MONTHS,datasets:[{data,borderColor:'#ff9500',backgroundColor:'rgba(255,149,0,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#ff9500',pointBorderColor:'#0a0f0a',pointBorderWidth:2,tension:0.4,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a211a',titleColor:'#fff',bodyColor:'#9a9a9a',borderColor:'#2a352a',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#555',font:{size:10,family:"'Inter',sans-serif"}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#555',font:{size:10,family:"'Inter',sans-serif"},callback:v=>v+'°'}}}}
+  });
+}
+
+function buildWeeklyBars() {
+  const c=document.getElementById('weekly-bars');
+  if(!c)return;
+  const days=['M','T','W','T','F','S','S'];
+  const heights=[45,30,55,40,35,25,60];
+  c.innerHTML=days.map((d,i)=>`
+    <div class="wbar-wrap">
+      <div class="wbar ${i===6?'today':heights[i]<35?'low':''}" style="height:${heights[i]}px"></div>
+      <div class="wday">${d}</div>
+    </div>
+  `).join('');
+}
+
+// ── HERD ──────────────────────────────────────────
+function renderHerd() {
+  const animals=isDemo?DEMO_ANIMALS:(hasDevice?DEMO_ANIMALS:[]);
+  const healthy=animals.filter(a=>a.status==='ok').length;
+  const warning=animals.filter(a=>a.status==='warn').length;
+  const critical=animals.filter(a=>a.status==='crit').length;
+
+  document.getElementById('view-herd').innerHTML=`
+    <div class="herd-stats">
+      <div class="hstat"><div class="hstat-val ok">${healthy}</div><div class="hstat-lbl">Healthy</div></div>
+      <div class="hstat"><div class="hstat-val warn">${warning}</div><div class="hstat-lbl">Warning</div></div>
+      <div class="hstat"><div class="hstat-val crit">${critical}</div><div class="hstat-lbl">Critical</div></div>
+      <div class="hstat"><div class="hstat-val total">${animals.length}</div><div class="hstat-lbl">Total</div></div>
+    </div>
+    <div class="animal-list">
+      ${animals.length===0?`<div style="text-align:center;padding:40px;color:var(--g2);font-size:13px"><div style="font-size:40px;opacity:0.3;margin-bottom:12px">🐄</div>No animals yet.<br>Add your device in Settings.</div>`:
+      animals.map(a=>`
+        <div class="animal-row" onclick="selectAnimalAndGo('${a.id}')">
+          <div class="ar-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></div>
+          <div class="ar-icon">${a.icon}</div>
+          <div class="ar-info">
+            <div class="ar-name">${a.name}</div>
+            <div class="ar-sub">${a.species} · ${a.tag}</div>
+          </div>
+          <div class="ar-vitals">
+            <div class="ar-temp">${a.temp.toFixed(1)}°C</div>
+            <div class="ar-hr">${a.hr} bpm</div>
+            <div class="ar-spo2">${a.spo2.toFixed(1)}%</div>
+          </div>
+          <div class="ar-arrow">›</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+window.selectAnimalAndGo = function(id) {
+  const a=DEMO_ANIMALS.find(x=>x.id===id);
+  if(a){currentAnimal=a;showView('dashboard');}
+};
+
+// ── SETTINGS ──────────────────────────────────────
+function renderSettings() {
+  const name = isDemo?'Demo Mode':(userProfile?.name||'—');
+  const email = isDemo?'demo@glahealth.app':(auth.currentUser?.email||'—');
+
+  document.getElementById('view-settings').innerHTML=`
+    <div class="settings-section">
+      <div class="account-hdr">
+        <div class="account-avatar">👤</div>
+        <div>
+          <div class="account-name">${name}</div>
+          <div class="account-email">${email}</div>
+        </div>
+        ${isDemo?'<div class="sr-badge demo" style="margin-left:auto">DEMO</div>':''}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Connection</div>
+      <div class="settings-row">
+        <div class="sr-icon">🔥</div>
+        <div class="sr-info">
+          <div class="sr-label">Firebase</div>
+          <div class="sr-sub">Connected – real time data active</div>
+        </div>
+        <div class="sr-badge live">Live</div>
+      </div>
+      <div class="settings-row">
+        <div class="sr-icon">📡</div>
+        <div class="sr-info">
+          <div class="sr-label">ESP32 Devices</div>
+          <div class="sr-sub">Ear tag sensors communicate via BLE/WiFi to Firebase</div>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="sr-icon">🔄</div>
+        <div class="sr-info">
+          <div class="sr-label">Update Frequency</div>
+          <div class="sr-sub">${isDemo?'Every 3 seconds (demo)':'Every 5 seconds – Real time (Firebase)'}</div>
+        </div>
+      </div>
+    </div>
+
+    ${!isDemo && !hasDevice ? `
+    <div class="settings-section">
+      <div class="settings-section-title">Link Device</div>
+      <div class="device-form">
+        <div class="device-form-title">Enter the Device Tag ID printed on your GLA ear tag collar sticker.</div>
+        <div class="dev-input-row">
+          <input class="dev-fi" id="dev-input" type="text" placeholder="GLA-XXXX-XXXX">
+          <button class="gen-btn" onclick="genDevId()">GEN</button>
+        </div>
+        <button class="link-btn" onclick="saveDeviceId()">Link Device</button>
+        <div class="emsg show" id="dev-err" style="text-align:center;margin-top:8px"></div>
+      </div>
+    </div>` : ''}
+
+    ${!isDemo && hasDevice ? `
+    <div class="settings-section">
+      <div class="settings-section-title">Linked Device</div>
+      <div class="settings-row">
+        <div class="sr-icon">📡</div>
+        <div class="sr-info">
+          <div class="sr-label">${userProfile?.deviceId||'—'}</div>
+          <div class="sr-sub">GLA Ear Tag Collar</div>
+        </div>
+        <div class="sr-badge live">● Active</div>
+      </div>
+      <div class="settings-row" style="cursor:pointer" onclick="removeDevice()">
+        <div class="sr-icon">🗑️</div>
+        <div class="sr-info"><div class="sr-label" style="color:var(--red)">Remove Device</div></div>
+      </div>
+    </div>` : ''}
+
+    <div class="settings-section">
+      <div class="settings-section-title">About</div>
+      <div class="settings-row">
+        <div class="sr-icon">ℹ️</div>
+        <div class="sr-info"><div class="sr-label">Version</div><div class="sr-sub">GLA Health v1.0</div></div>
+      </div>
+      <div class="settings-row">
+        <div class="sr-icon">🔧</div>
+        <div class="sr-info"><div class="sr-label">Device Support</div><div class="sr-sub">ESP32-C3 ear tag with temp, HR, SpO₂, accel sensors</div></div>
+      </div>
+    </div>
+
+    <div style="padding:8px 0 12px">
+      <button class="exit-btn" onclick="${isDemo?'exitDemo()':'doLogout()'}">
+        ↩ ${isDemo?'Exit Demo Mode':'Sign Out'}
+      </button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--g3);padding:4px 0 16px">GLA Health © 2025 · Green Livestock Africa</div>
+  `;
+}
+
+window.genDevId = function() {
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='GLA-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
+  s+='-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
+  document.getElementById('dev-input').value=s;
+};
+
+window.saveDeviceId = async function() {
+  const id=document.getElementById('dev-input')?.value.trim().toUpperCase();
+  const errEl=document.getElementById('dev-err');
+  if(!id||id.length<6){errEl.textContent='Enter a valid Device Tag ID';return;}
+  try {
+    const user=auth.currentUser;
+    await setDoc(doc(db,'farms',user.uid),{deviceId:id},{merge:true});
+    hasDevice=true;
+    userProfile={...userProfile,deviceId:id};
+    t('✅ Device linked: '+id,'ok');
+    startSim();
+    renderSettings();
+  } catch(e){errEl.textContent='Error saving. Try again.';}
+};
+
+window.removeDevice = async function() {
+  await setDoc(doc(db,'farms',auth.currentUser.uid),{deviceId:''},{merge:true});
+  hasDevice=false;
+  if(simTimer){clearInterval(simTimer);simTimer=null;}
+  t('Device removed');
+  renderSettings();
+};
+
+window.exitDemo = function() {
+  isDemo=false;
+  if(simTimer){clearInterval(simTimer);simTimer=null;}
+  showAuth();
+  t('Demo mode exited');
+};
+
+// ── HELPERS ───────────────────────────────────────
+function t(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast'+(type?' '+type:'');
+  el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+function fe(code){
+  const m={'auth/email-already-in-use':'Email already registered.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password too weak.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Incorrect email or password.','auth/too-many-requests':'Too many attempts. Wait.','auth/network-request-failed':'Network error.'};
+  return m[code]||'Something went wrong.';
+}
+</script>
+</body>
+</html>
