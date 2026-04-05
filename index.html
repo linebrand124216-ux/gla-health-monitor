@@ -253,6 +253,36 @@ html,body{height:100%;background:var(--bg);color:var(--white);font-family:var(--
 .gen-btn{padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--neon);font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;font-family:var(--font)}
 .link-btn{width:100%;padding:13px;border-radius:10px;background:var(--neon);color:var(--bg);border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer}
 
+/* ── HEALTH BANNER ── */
+.health-banner{border-radius:12px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid transparent;gap:10px}
+.health-banner.ok{background:rgba(0,255,65,0.08);border-color:rgba(0,255,65,0.2)}
+.health-banner.warn{background:rgba(255,149,0,0.1);border-color:rgba(255,149,0,0.3)}
+.health-banner.crit{background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.3);animation:hbf 1s ease-in-out infinite}
+@keyframes hbf{0%,100%{opacity:1}50%{opacity:0.85}}
+.hban-left{display:flex;align-items:center;gap:10px;flex:1}
+.hban-icon{font-size:22px;flex-shrink:0}
+.hban-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+.hban-sub{font-size:10px;color:var(--g2)}
+.hban-vitals{display:flex;flex-direction:column;gap:2px;align-items:flex-end;flex-shrink:0}
+.hban-v{font-size:11px;font-weight:700}
+.hban-v.amb{color:var(--amb)}
+.hban-v.red{color:var(--red)}
+.hban-v.blue{color:var(--blue)}
+
+/* ── MONTHLY VERTICAL CHART ── */
+.monthly-vertical{display:flex;flex-direction:column;gap:6px}
+.mv-row{display:grid;grid-template-columns:28px 1fr 28px 1fr;align-items:center;gap:6px;padding:4px 0}
+.mv-row.now{background:rgba(0,255,65,0.04);border-radius:6px;padding:4px 6px;margin:0 -6px}
+.mv-label{font-size:10px;font-weight:600;color:var(--g2);text-align:right}
+.mv-bar-track{height:8px;background:var(--g4);border-radius:4px;overflow:hidden}
+.mv-bar-fill{height:100%;border-radius:4px;transition:width 0.6s ease}
+.mv-score{font-size:10px;font-weight:700;text-align:center}
+.mv-detail{font-size:9px;color:var(--g3)}
+
+/* ── ADD ANIMAL CARD ── */
+.add-animal-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer}
+.add-animal-form{padding-top:2px}
+
 /* ── BOTTOM NAV ── */
 .bnav{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 0 16px;display:flex;justify-content:space-around}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:0.4;transition:opacity 0.2s;padding:4px 20px;-webkit-tap-highlight-color:transparent;min-width:60px}
@@ -384,7 +414,7 @@ html,body{height:100%;background:var(--bg);color:var(--white);font-family:var(--
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, getDoc as _getDoc, collection, onSnapshot, serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCo-69r1IQsdTC4DP8xQTB7UeJiejtLD-0",
@@ -418,6 +448,12 @@ let currentAnimal=DEMO_ANIMALS[0], simTimer=null, batt=82;
 let tempChart=null, weekChart=null;
 const MONTHS=['Jan','Mar','May','Jul','Sep','Nov'];
 
+// ── REAL-TIME LISTENER STATE ──────────────────────
+let unsubAnimals=null;   // listener for animals collection
+let unsubReadings=null;  // listener for readings collection
+let liveAnimals=[];      // animals from Firestore
+let liveReadings={};     // latest readings keyed by animalId
+
 // ── AUTH STATE ────────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
   setTimeout(()=>document.getElementById('load').classList.add('out'), 1600);
@@ -449,7 +485,89 @@ function launchApp(demo) {
   document.getElementById('pg-auth').classList.remove('on');
   document.getElementById('pg-app').classList.add('on');
   showView('dashboard');
-  if (demo || hasDevice) startSim();
+  if (demo) {
+    startSim(); // Only simulate in demo mode
+  } else {
+    startLiveListeners(auth.currentUser.uid); // Real users: listen to Firestore
+  }
+}
+
+// ── REAL-TIME FIRESTORE LISTENERS ─────────────────
+function startLiveListeners(uid) {
+  // Stop any existing listeners first
+  stopLiveListeners();
+
+  // 1. Listen to animals collection
+  unsubAnimals = onSnapshot(
+    collection(db, 'farms', uid, 'animals'),
+    (snap) => {
+      liveAnimals = snap.docs.map(d => {
+        const data = d.data();
+        const species = data.species || 'Cattle';
+        const icon = {Cattle:'🐄',Goat:'🐐',Sheep:'🐑',Horse:'🐎',Pig:'🐖'}[species] || '🐄';
+        return { id: d.id, icon, status: 'ok', temp: 0, hr: 0, spo2: 0, batt: 0, motion: 0, ax: 0, ay: 0, az: 0, ...data };
+      });
+      // Merge any existing readings into the refreshed animal list
+      mergeReadingsIntoAnimals();
+      if (!currentAnimal || !liveAnimals.find(a => a.id === currentAnimal.id)) {
+        currentAnimal = liveAnimals[0] || null;
+      }
+      renderDashboard();
+      renderHerd();
+    },
+    (err) => console.error('Animals listener error:', err)
+  );
+
+  // 2. Listen to readings collection (ESP32 writes here)
+  unsubReadings = onSnapshot(
+    collection(db, 'farms', uid, 'readings'),
+    (snap) => {
+      snap.docs.forEach(d => { liveReadings[d.id] = d.data(); });
+      mergeReadingsIntoAnimals();
+      // Update dashboard live values without full re-render
+      if (currentAnimal) updateLiveValues();
+      // Flash the topbar dot to show data received
+      const dot = document.getElementById('topbar-dot');
+      if (dot) { dot.style.background = '#fff'; setTimeout(() => dot.style.background = '', 200); }
+    },
+    (err) => console.error('Readings listener error:', err)
+  );
+}
+
+function stopLiveListeners() {
+  if (unsubAnimals) { unsubAnimals(); unsubAnimals = null; }
+  if (unsubReadings) { unsubReadings(); unsubReadings = null; }
+}
+
+function mergeReadingsIntoAnimals() {
+  // Merge the latest ESP32 readings into each animal object
+  liveAnimals.forEach(a => {
+    const r = liveReadings[a.id];
+    if (!r) return;
+    const ranges = RANGES[a.species] || RANGES.Cattle;
+    a.temp   = r.temp   ?? a.temp;
+    a.hr     = r.hr     ?? a.hr;
+    a.spo2   = r.spo2   ?? a.spo2;
+    a.batt   = r.batt   ?? a.batt;
+    a.motion = r.motion ?? a.motion;
+    a.ax     = r.ax     ?? a.ax;
+    a.ay     = r.ay     ?? a.ay;
+    a.az     = r.az     ?? a.az;
+    a.lastSeen = r.updatedAt || null;
+    // Auto-compute health status from real readings
+    const tempHigh = a.temp > ranges.temp[1] + 0.5;
+    const tempLow  = a.temp < ranges.temp[0] - 0.5;
+    const hrHigh   = a.hr   > ranges.hr[1]   + 10;
+    const spo2Low  = a.spo2 < ranges.spo2    - 2;
+    if (tempHigh || hrHigh) a.status = 'crit';
+    else if (tempLow || spo2Low || a.hr > ranges.hr[1]) a.status = 'warn';
+    else a.status = 'ok';
+  });
+  // Also update currentAnimal reference
+  if (currentAnimal) {
+    const updated = liveAnimals.find(a => a.id === currentAnimal.id);
+    if (updated) currentAnimal = updated;
+  }
 }
 
 // ── AUTH FUNCTIONS ────────────────────────────────
@@ -514,6 +632,8 @@ window.enterDemo = function() {
 
 window.doLogout = async function() {
   if(simTimer){clearInterval(simTimer);simTimer=null;}
+  stopLiveListeners();
+  liveAnimals=[]; liveReadings={};
   isDemo=false;
   if(auth.currentUser) await signOut(auth);
   showAuth();
@@ -546,20 +666,39 @@ window.showView = function(view) {
 
 // ── DASHBOARD ─────────────────────────────────────
 function renderDashboard() {
-  const animals = isDemo ? DEMO_ANIMALS : (hasDevice ? DEMO_ANIMALS : []);
-  const bar = document.getElementById('pill-bar');
-  bar.innerHTML = '';
-  animals.forEach((a,i)=>{
-    const p=document.createElement('div');
-    p.className='pill'+(currentAnimal.id===a.id?' act':'');
-    p.innerHTML=`<span class="pill-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></span><span class="pill-icon">${a.icon}</span><span class="pill-name">${a.name}</span>`;
-    p.onclick=()=>{currentAnimal=a;renderDashboard();};
-    bar.appendChild(p);
-  });
+  const animals = getAllAnimals();
+  buildPillBar();
 
   const view=document.getElementById('view-dashboard');
+
+  // No device linked at all
   if(!isDemo && !hasDevice) {
     view.innerHTML=`<div class="no-device"><div class="no-device-icon">📡</div><div class="no-device-title">No device linked yet</div><div class="no-device-sub">Link your GLA ear tag collar in Settings to start monitoring your herd.</div><button class="no-device-btn" onclick="showView('settings')">⚙️ Go to Settings</button></div>`;
+    return;
+  }
+
+  // Device is linked, real mode, but no animals registered in herd yet
+  if(!isDemo && hasDevice && liveAnimals.length===0) {
+    view.innerHTML=`
+      <div class="no-device">
+        <div class="no-device-icon" style="opacity:0.6;animation:bl 2s ease-in-out infinite">📡</div>
+        <div class="no-device-title">Waiting for Device Signal</div>
+        <div class="no-device-sub">Your device <strong style="color:var(--neon)">${userProfile?.deviceId||''}</strong> is registered.<br><br>First, add your animals in the <strong style="color:var(--white)">Herd</strong> tab. Then power on your GLA ESP32-C3 — the dashboard will update automatically once data arrives.</div>
+        <button class="no-device-btn" style="margin-top:8px" onclick="showView('herd')">🐄 Go to Herd</button>
+        <div style="margin-top:16px;font-size:11px;color:var(--g3)">No simulated data shown until real device connects.</div>
+      </div>`;
+    return;
+  }
+
+  // Animals exist but no readings yet from ESP32
+  if(!isDemo && hasDevice && liveAnimals.length>0 && !liveReadings[liveAnimals[0]?.id]) {
+    view.innerHTML=`
+      <div class="no-device">
+        <div class="no-device-icon" style="opacity:0.8;animation:bl 1.5s ease-in-out infinite">⏳</div>
+        <div class="no-device-title">Awaiting First Reading</div>
+        <div class="no-device-sub">${liveAnimals.length} animal${liveAnimals.length>1?'s':''} registered.<br><br>Power on your ESP32-C3 ear tag and ensure it is connected to WiFi. It will push sensor data here automatically.</div>
+        <div style="margin-top:16px;font-size:11px;color:var(--neon)">● Listening for ESP32-C3 signal...</div>
+      </div>`;
     return;
   }
   const a=currentAnimal;
@@ -570,6 +709,22 @@ function renderDashboard() {
   const wBadge=a.status==='warn'?'warn':a.status==='crit'?'crit':'ok';
 
   view.innerHTML=`
+    <!-- HEALTH BANNER -->
+    <div class="health-banner ${wBadge}" style="margin-bottom:12px">
+      <div class="hban-left">
+        <div class="hban-icon">${a.status==='warn'?'⚠️':a.status==='crit'?'🚨':'✅'}</div>
+        <div>
+          <div class="hban-title">${a.status==='warn'?'Warning Detected':a.status==='crit'?'Critical Alert':'All Vitals Normal'}</div>
+          <div class="hban-sub">${a.name} · ${a.species}</div>
+        </div>
+      </div>
+      <div class="hban-vitals">
+        <div class="hban-v amb" id="banner-temp">${a.temp.toFixed(1)}°C</div>
+        <div class="hban-v red" id="banner-hr">${a.hr} bpm</div>
+        <div class="hban-v blue" id="banner-spo2">${a.spo2.toFixed(1)}%</div>
+      </div>
+    </div>
+
     <div class="animal-hdr">
       <div class="animal-hdr-left">
         <div class="animal-icon-big">${a.icon}</div>
@@ -622,7 +777,7 @@ function renderDashboard() {
     <div class="info-card">
       <div class="info-row">
         <div class="info-label"><span class="info-icon">🕐</span>Last update</div>
-        <div class="info-val" id="sv-time">${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</div>
+        <div class="info-val" id="sv-time">${isDemo ? new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : (a.lastSeen?.toDate ? a.lastSeen.toDate().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : 'Waiting...')}</div>
       </div>
       <div class="info-row">
         <div class="info-label"><span class="info-icon">📡</span>Signal</div>
@@ -660,7 +815,7 @@ function animMotionBars() {
 function startSim() {
   if(simTimer)clearInterval(simTimer);
   simTimer=setInterval(()=>{
-    DEMO_ANIMALS.forEach(a=>{
+    getAllAnimals().forEach(a=>{
       const r=RANGES[a.species]||RANGES.Cattle;
       a.temp=+((r.temp[0]+r.temp[1])/2+(Math.random()-0.5)*0.8).toFixed(1);
       a.hr=Math.round((r.hr[0]+r.hr[1])/2+(Math.random()-0.5)*12);
@@ -672,8 +827,10 @@ function startSim() {
       a.az=+(0.8+Math.random()*0.2).toFixed(2);
     });
     // keep Nanny as warning animal for demo
-    DEMO_ANIMALS[1].temp=+(RANGES.Goat.temp[1]+0.5+Math.random()*0.5).toFixed(1);
-    DEMO_ANIMALS[1].status='warn';
+    if(DEMO_ANIMALS[1]){
+      DEMO_ANIMALS[1].temp=+(RANGES.Goat.temp[1]+0.5+Math.random()*0.5).toFixed(1);
+      DEMO_ANIMALS[1].status='warn';
+    }
     updateLiveValues();
     animMotionBars();
   },3000);
@@ -681,19 +838,36 @@ function startSim() {
 
 function updateLiveValues() {
   const a=currentAnimal;
+  if(!a)return;
   const sv=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
   sv('sv-temp',a.temp.toFixed(1));
   sv('sv-hr',a.hr);
   sv('sv-spo2',a.spo2.toFixed(1));
   sv('sv-batt',Math.round(a.batt)+'%');
   sv('sv-motion',a.motion+'%');
-  sv('sv-time',new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  const timeStr = isDemo
+    ? new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+    : (a.lastSeen?.toDate ? a.lastSeen.toDate().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : 'Just now');
+  sv('sv-time', timeStr);
   const bf=document.getElementById('bm-batt-fill');
   if(bf){bf.style.width=Math.round(a.batt)+'%';bf.className='bm-fill'+(a.batt<20?' lo':'');}
+  // Update banner vitals live
+  sv('banner-temp',a.temp.toFixed(1)+'°C');
+  sv('banner-hr',a.hr+' bpm');
+  sv('banner-spo2',a.spo2.toFixed(1)+'%');
 }
 
 // ── ANALYTICS ────────────────────────────────────
 function renderAnalytics() {
+  // Guard: don't show fake analytics for real users without live data
+  if(!isDemo && hasDevice) {
+    document.getElementById('view-analytics').innerHTML=`<div class="no-device"><div class="no-device-icon" style="opacity:0.6;animation:bl 2s ease-in-out infinite">📊</div><div class="no-device-title">No Data Yet</div><div class="no-device-sub">Analytics will appear here once your ESP32-C3 device starts sending real sensor readings.</div></div>`;
+    return;
+  }
+  if(!isDemo && !hasDevice) {
+    document.getElementById('view-analytics').innerHTML=`<div class="no-device"><div class="no-device-icon">📊</div><div class="no-device-title">No device linked</div><div class="no-device-sub">Link your GLA ear tag in Settings to see analytics.</div><button class="no-device-btn" onclick="showView('settings')">⚙️ Go to Settings</button></div>`;
+    return;
+  }
   const a=currentAnimal;
   const r=RANGES[a.species]||RANGES.Cattle;
   const avgT=((r.temp[0]+r.temp[1])/2+0.1).toFixed(1);
@@ -701,11 +875,42 @@ function renderAnalytics() {
   const avgHR=Math.round((r.hr[0]+r.hr[1])/2);
   const peakHR=r.hr[1]+8;
 
+  // Build 12 months of VERTICAL bar data
+  const ALL_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mid=(r.temp[0]+r.temp[1])/2;
+  const monthData=ALL_MONTHS.map((m,i)=>{
+    const score=Math.round(72+Math.random()*25-(i===1||i===6?15:0));
+    const temp=+(mid+(Math.random()-0.5)*1.2).toFixed(1);
+    const hr=Math.round(avgHR+(Math.random()-0.5)*8);
+    const spo2=+(96+Math.random()*3).toFixed(1);
+    return {m,score:Math.max(55,Math.min(100,score)),temp,hr,spo2};
+  });
+  const best=monthData.reduce((a,b)=>a.score>b.score?a:b);
+  const worst=monthData.reduce((a,b)=>a.score<b.score?a:b);
+  const alerts=monthData.filter(m=>m.score<75).length;
+
   document.getElementById('view-analytics').innerHTML=`
     <div class="analytics-header">
       <span style="font-size:22px">${a.icon}</span>
       <div class="analytics-title">${a.name} — Analytics</div>
     </div>
+
+    <!-- HEALTH BANNER -->
+    <div class="health-banner ${a.status==='warn'?'warn':a.status==='crit'?'crit':'ok'}">
+      <div class="hban-left">
+        <div class="hban-icon">${a.status==='warn'?'⚠️':a.status==='crit'?'🚨':'✅'}</div>
+        <div>
+          <div class="hban-title">${a.status==='warn'?'Warning Detected':a.status==='crit'?'Critical Alert':'All Vitals Normal'}</div>
+          <div class="hban-sub">${a.name} · ${a.species} · Updated just now</div>
+        </div>
+      </div>
+      <div class="hban-vitals">
+        <div class="hban-v amb">${a.temp.toFixed(1)}°C</div>
+        <div class="hban-v red">${a.hr} bpm</div>
+        <div class="hban-v blue">${a.spo2.toFixed(1)}%</div>
+      </div>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon">🌡️</div>
@@ -727,41 +932,108 @@ function renderAnalytics() {
       </div>
       <div class="stat-card">
         <div class="stat-icon">✅</div>
-        <div class="stat-val good">Good</div>
+        <div class="stat-val good">${a.status==='warn'?'Warn':a.status==='crit'?'Crit':'Good'}</div>
         <div class="stat-label">Status</div>
         <div class="stat-sub">12 month</div>
       </div>
     </div>
+
+    <!-- VERTICAL MONTHLY CHART -->
     <div class="chart-card">
-      <div class="chart-title">Temperature Trend (12 months)</div>
-      <div class="chart-wrap"><canvas id="temp-chart"></canvas></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="chart-title">Monthly Health Score</div>
+        <div style="font-size:10px;color:var(--g3)">12 months</div>
+      </div>
+      <div style="font-size:10px;color:var(--g2);margin-bottom:12px">Higher = healthier · Below 75 = alert</div>
+      <div class="monthly-vertical" id="monthly-vert">
+        ${monthData.map((md,i)=>{
+          const pct=md.score;
+          const col=pct>=85?'var(--neon)':pct>=75?'var(--amb)':'var(--red)';
+          const isNow=i===new Date().getMonth();
+          return `<div class="mv-row ${isNow?'now':''}">
+            <div class="mv-label">${md.m}</div>
+            <div class="mv-bar-track">
+              <div class="mv-bar-fill" style="width:${pct}%;background:${col}"></div>
+            </div>
+            <div class="mv-score" style="color:${col}">${pct}</div>
+            <div class="mv-detail">${md.temp}°C · ${md.hr}bpm · ${md.spo2}%</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:14px;margin-top:12px;font-size:10px">
+        <span style="color:var(--neon)">● ≥85 Healthy</span>
+        <span style="color:var(--amb)">● 75–84 Watch</span>
+        <span style="color:var(--red)">● &lt;75 Alert</span>
+      </div>
     </div>
+
+    <!-- SUMMARY STATS -->
+    <div class="chart-card">
+      <div class="chart-title" style="margin-bottom:12px">12-Month Summary</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--bg3);border-radius:10px;padding:12px;border:1px solid var(--border2)">
+          <div style="font-size:10px;color:var(--g2);margin-bottom:4px">BEST MONTH</div>
+          <div style="font-size:18px;font-weight:700;color:var(--neon)">${best.m}</div>
+          <div style="font-size:10px;color:var(--g3)">Score: ${best.score}</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:10px;padding:12px;border:1px solid var(--border2)">
+          <div style="font-size:10px;color:var(--g2);margin-bottom:4px">WORST MONTH</div>
+          <div style="font-size:18px;font-weight:700;color:var(--amb)">${worst.m}</div>
+          <div style="font-size:10px;color:var(--g3)">Score: ${worst.score}</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:10px;padding:12px;border:1px solid var(--border2)">
+          <div style="font-size:10px;color:var(--g2);margin-bottom:4px">YEAR ALERTS</div>
+          <div style="font-size:18px;font-weight:700;color:var(--red)">${alerts}</div>
+          <div style="font-size:10px;color:var(--g3)">Below threshold</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:10px;padding:12px;border:1px solid var(--border2)">
+          <div style="font-size:10px;color:var(--g2);margin-bottom:4px">AVG TEMP</div>
+          <div style="font-size:18px;font-weight:700;color:var(--amb)">${avgT}°</div>
+          <div style="font-size:10px;color:var(--g3)">Annual mean</div>
+        </div>
+      </div>
+    </div>
+
     <div class="health-events">
       <div class="he-title">Health Events</div>
-      <div class="he-item"><div class="he-dot"></div>All readings within normal range</div>
-      ${a.status==='warn'?'<div class="he-item"><div class="he-dot w"></div>Elevated temperature detected</div>':''}
+      ${alerts===0?'<div class="he-item"><div class="he-dot"></div>All readings within normal range</div>':''}
+      ${alerts>0?`<div class="he-item"><div class="he-dot w"></div>${alerts} month(s) below health threshold</div>`:''}
+      ${a.status==='warn'?'<div class="he-item"><div class="he-dot w"></div>Elevated temperature currently detected</div>':''}
+      <div class="he-item"><div class="he-dot"></div>Monthly data saved to cloud automatically</div>
     </div>
+
     <div class="weekly-card">
       <div class="chart-title">Weekly Activity</div>
       <div class="weekly-bars" id="weekly-bars"></div>
     </div>
   `;
-  buildTempChart();
   buildWeeklyBars();
+  // Auto-save monthly data to Firestore
+  saveMonthlyData(a);
 }
 
-function buildTempChart() {
-  const ctx=document.getElementById('temp-chart');
-  if(!ctx)return;
-  const r=RANGES[currentAnimal.species]||RANGES.Cattle;
-  const mid=(r.temp[0]+r.temp[1])/2;
-  const data=MONTHS.map(()=>+(mid+(Math.random()-0.5)*1.2).toFixed(1));
-  if(tempChart){tempChart.destroy();tempChart=null;}
-  tempChart=new Chart(ctx,{
-    type:'line',
-    data:{labels:MONTHS,datasets:[{data,borderColor:'#ff9500',backgroundColor:'rgba(255,149,0,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#ff9500',pointBorderColor:'#0a0f0a',pointBorderWidth:2,tension:0.4,fill:true}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a211a',titleColor:'#fff',bodyColor:'#9a9a9a',borderColor:'#2a352a',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#555',font:{size:10,family:"'Inter',sans-serif"}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#555',font:{size:10,family:"'Inter',sans-serif"},callback:v=>v+'°'}}}}
-  });
+async function saveMonthlyData(animal) {
+  if(isDemo||!auth.currentUser)return;
+  try {
+    const now=new Date();
+    const monthKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const r=RANGES[animal.species]||RANGES.Cattle;
+    await setDoc(
+      doc(db,'farms',auth.currentUser.uid,'animals',animal.id,'monthlyData',monthKey),
+      {
+        month:monthKey,
+        animalId:animal.id,
+        animalName:animal.name,
+        species:animal.species,
+        avgTemp:animal.temp,
+        avgHR:animal.hr,
+        avgSpo2:animal.spo2,
+        status:animal.status,
+        savedAt:serverTimestamp()
+      },
+      {merge:true}
+    );
+  } catch(e){console.log('Monthly save skipped:',e.message);}
 }
 
 function buildWeeklyBars() {
@@ -778,8 +1050,18 @@ function buildWeeklyBars() {
 }
 
 // ── HERD ──────────────────────────────────────────
+function getAllAnimals() {
+  if (isDemo) return [...DEMO_ANIMALS, ...customAnimals];
+  return liveAnimals; // Real users: animals come from Firestore
+}
+
 function renderHerd() {
-  const animals=isDemo?DEMO_ANIMALS:(hasDevice?DEMO_ANIMALS:[]);
+  // Guard: real users without a device see a prompt
+  if(!isDemo && !hasDevice) {
+    document.getElementById('view-herd').innerHTML=`<div class="no-device"><div class="no-device-icon">🐄</div><div class="no-device-title">No device linked</div><div class="no-device-sub">Link your GLA ear tag in Settings to manage your herd.</div><button class="no-device-btn" onclick="showView('settings')">⚙️ Go to Settings</button></div>`;
+    return;
+  }
+  const animals=getAllAnimals();
   const healthy=animals.filter(a=>a.status==='ok').length;
   const warning=animals.filter(a=>a.status==='warn').length;
   const critical=animals.filter(a=>a.status==='crit').length;
@@ -789,10 +1071,54 @@ function renderHerd() {
       <div class="hstat"><div class="hstat-val ok">${healthy}</div><div class="hstat-lbl">Healthy</div></div>
       <div class="hstat"><div class="hstat-val warn">${warning}</div><div class="hstat-lbl">Warning</div></div>
       <div class="hstat"><div class="hstat-val crit">${critical}</div><div class="hstat-lbl">Critical</div></div>
-      <div class="hstat"><div class="hstat-val total">${animals.length}</div><div class="hstat-lbl">Total</div></div>
+      <div class="hstat"><div class="hstat-val total">${animals.length}/100</div><div class="hstat-lbl">Total</div></div>
     </div>
+
+    <!-- ADD ANIMAL SECTION -->
+    <div class="add-animal-card" id="add-animal-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${addAnimalOpen?'14':'0'}px" onclick="toggleAddAnimal()">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">➕</span>
+          <span style="font-size:13px;font-weight:600;color:var(--white)">Add Animal</span>
+          <span style="font-size:10px;color:var(--g3)">${animals.length}/100</span>
+        </div>
+        <span style="color:var(--neon);font-size:16px;transition:transform 0.2s;display:inline-block;transform:rotate(${addAnimalOpen?'180':'0'}deg)">▾</span>
+      </div>
+      ${addAnimalOpen?`
+      <div class="add-animal-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">ANIMAL NAME</div>
+            <input class="dev-fi" id="new-animal-name" type="text" placeholder="e.g. Daisy" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">SPECIES</div>
+            <select class="dev-fi" id="new-animal-species" style="width:100%">
+              <option value="Cattle">🐄 Cattle</option>
+              <option value="Goat">🐐 Goat</option>
+              <option value="Sheep">🐑 Sheep</option>
+              <option value="Horse">🐎 Horse</option>
+              <option value="Pig">🐖 Pig</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">TAG CODE (auto-generated, unique)</div>
+          <div style="display:flex;gap:7px">
+            <input class="dev-fi" id="new-animal-tag" type="text" placeholder="GLA-XXXX-XXXX" style="flex:1;text-transform:uppercase" readonly>
+            <button class="gen-btn" onclick="genAnimalTag()">GEN</button>
+          </div>
+        </div>
+        <button class="link-btn" onclick="addAnimal()" ${animals.length>=100?'disabled style="opacity:0.4"':''}>
+          ${animals.length>=100?'Herd Full (100/100)':'Add to Herd'}
+        </button>
+        <div class="emsg show" id="add-animal-err" style="margin-top:6px;text-align:center"></div>
+      </div>
+      `:''}
+    </div>
+
     <div class="animal-list">
-      ${animals.length===0?`<div style="text-align:center;padding:40px;color:var(--g2);font-size:13px"><div style="font-size:40px;opacity:0.3;margin-bottom:12px">🐄</div>No animals yet.<br>Add your device in Settings.</div>`:
+      ${animals.length===0?`<div style="text-align:center;padding:40px;color:var(--g2);font-size:13px"><div style="font-size:40px;opacity:0.3;margin-bottom:12px">🐄</div>No animals yet. Add your first animal above.</div>`:
       animals.map(a=>`
         <div class="animal-row" onclick="selectAnimalAndGo('${a.id}')">
           <div class="ar-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></div>
@@ -811,12 +1137,104 @@ function renderHerd() {
       `).join('')}
     </div>
   `;
+  // Auto-generate a tag code ready to use
+  setTimeout(()=>{ if(addAnimalOpen) genAnimalTag(); },50);
 }
 
+let addAnimalOpen=false;
+window.toggleAddAnimal=function(){
+  addAnimalOpen=!addAnimalOpen;
+  renderHerd();
+};
+
+window.genAnimalTag=function(){
+  const allAnimals=getAllAnimals();
+  const usedTags=new Set(allAnimals.map(a=>a.tag));
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let tag='';
+  let attempts=0;
+  do {
+    tag='GLA-';
+    for(let i=0;i<4;i++)tag+=c[Math.floor(Math.random()*c.length)];
+    tag+='-';
+    for(let i=0;i<4;i++)tag+=c[Math.floor(Math.random()*c.length)];
+    attempts++;
+  } while(usedTags.has(tag)&&attempts<1000);
+  const el=document.getElementById('new-animal-tag');
+  if(el)el.value=tag;
+};
+
+const SPECIES_ICONS={Cattle:'🐄',Goat:'🐐',Sheep:'🐑',Horse:'🐎',Pig:'🐖'};
+let customAnimals=[];
+
+window.addAnimal=async function(){
+  const name=document.getElementById('new-animal-name')?.value.trim();
+  const species=document.getElementById('new-animal-species')?.value;
+  const tag=document.getElementById('new-animal-tag')?.value.trim().toUpperCase();
+  const errEl=document.getElementById('add-animal-err');
+  if(errEl)errEl.textContent='';
+
+  if(!name){if(errEl)errEl.textContent='Enter an animal name';return;}
+  if(!tag||tag.length<8){if(errEl)errEl.textContent='Generate a tag code first';return;}
+
+  const all=getAllAnimals();
+  if(all.length>=100){if(errEl)errEl.textContent='Maximum 100 animals reached';return;}
+  if(all.some(a=>a.tag===tag)){
+    if(errEl)errEl.textContent='Tag already in use — generate a new one';
+    genAnimalTag();
+    return;
+  }
+
+  const r=RANGES[species]||RANGES.Cattle;
+  const newAnimal={
+    id:'custom-'+Date.now(),
+    name,species,tag,
+    icon:SPECIES_ICONS[species]||'🐄',
+    status:'ok',
+    temp:+((r.temp[0]+r.temp[1])/2).toFixed(1),
+    hr:Math.round((r.hr[0]+r.hr[1])/2),
+    spo2:97.0,batt:100,motion:30,
+    ax:0.1,ay:0.1,az:0.95
+  };
+  customAnimals.push(newAnimal);
+
+  // Save to Firestore if logged in
+  if(!isDemo&&auth.currentUser){
+    try {
+      await setDoc(
+        doc(db,'farms',auth.currentUser.uid,'animals',newAnimal.id),
+        {...newAnimal,createdAt:serverTimestamp()},
+        {merge:true}
+      );
+    } catch(e){console.log('Animal save skipped');}
+  }
+
+  addAnimalOpen=false;
+  t('✅ '+name+' added to herd','ok');
+  renderHerd();
+  // Update pill bar if on dashboard
+  const pb=document.getElementById('pill-bar');
+  if(pb&&pb.style.display!=='none') buildPillBar();
+};
+
 window.selectAnimalAndGo = function(id) {
-  const a=DEMO_ANIMALS.find(x=>x.id===id);
+  const a=getAllAnimals().find(x=>x.id===id);
   if(a){currentAnimal=a;showView('dashboard');}
 };
+
+function buildPillBar() {
+  const animals=getAllAnimals();
+  const bar=document.getElementById('pill-bar');
+  if(!bar)return;
+  bar.innerHTML='';
+  animals.forEach(a=>{
+    const p=document.createElement('div');
+    p.className='pill'+(currentAnimal.id===a.id?' act':'');
+    p.innerHTML=`<span class="pill-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></span><span class="pill-icon">${a.icon}</span><span class="pill-name">${a.name}</span>`;
+    p.onclick=()=>{currentAnimal=a;renderDashboard();};
+    bar.appendChild(p);
+  });
+}
 
 // ── SETTINGS ──────────────────────────────────────
 function renderSettings() {
@@ -929,9 +1347,10 @@ window.saveDeviceId = async function() {
     await setDoc(doc(db,'farms',user.uid),{deviceId:id},{merge:true});
     hasDevice=true;
     userProfile={...userProfile,deviceId:id};
-    t('✅ Device linked: '+id,'ok');
-    startSim();
+    t('✅ Device linked: '+id+' — Waiting for ESP32 signal...','ok');
+    // Do NOT start simulation — dashboard will show "Awaiting device" until real data arrives
     renderSettings();
+    renderDashboard();
   } catch(e){errEl.textContent='Error saving. Try again.';}
 };
 
