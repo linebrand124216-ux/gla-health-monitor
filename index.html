@@ -395,6 +395,177 @@ body.light .topbar-title{color:#6b6b6b}
 .mv-score{font-size:10px;font-weight:700;text-align:center}
 .mv-detail{font-size:9px;color:var(--g3)}
 
+/* ── NEW FEATURES CSS ── */
+/* Care view tabs */
+.care-tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none;flex-shrink:0}
+.care-tabs::-webkit-scrollbar{display:none}
+.care-tab{padding:7px 13px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--card);color:var(--g2);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all 0.2s;letter-spacing:0.3px}
+.care-tab.act{background:var(--neon-dim);border-color:var(--neon);color:var(--neon)}
+
+/* Vaccination cards */
+.vacc-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.vacc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.vacc-icon.due{background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3)}
+.vacc-icon.ok{background:var(--neon-dim);border:1px solid rgba(92,184,92,0.3)}
+.vacc-icon.overdue{background:var(--red-dim);border:1px solid rgba(255,68,68,0.3)}
+.vacc-info{flex:1}
+.vacc-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+.vacc-animal{font-size:10px;color:var(--g2);margin-bottom:3px}
+.vacc-date{font-size:11px;font-weight:600}
+.vacc-date.due{color:var(--amb)}
+.vacc-date.ok{color:var(--neon)}
+.vacc-date.overdue{color:var(--red)}
+.vacc-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.5px;flex-shrink:0}
+.vacc-badge.due{background:var(--amb-dim);color:var(--amb)}
+.vacc-badge.ok{background:var(--neon-dim);color:var(--neon)}
+.vacc-badge.overdue{background:var(--red-dim);color:var(--red)}
+
+/* Treatment history */
+.treat-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:8px}
+.treat-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.treat-name{font-size:13px;font-weight:700;color:var(--white)}
+.treat-date{font-size:10px;color:var(--g3)}
+.treat-rows{display:flex;flex-direction:column;gap:4px}
+.treat-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--g2)}
+.treat-row-icon{font-size:12px;width:18px;text-align:center}
+.treat-animal-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--neon-dim);color:var(--neon);border:1px solid rgba(92,184,92,0.2)}
+
+/* Heat stress */
+.heat-alert-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:8px}
+.heat-alert-card.high{border-color:rgba(255,68,68,0.5);background:rgba(255,68,68,0.05)}
+.heat-alert-card.med{border-color:rgba(200,134,10,0.5);background:rgba(200,134,10,0.05)}
+.heat-alert-card.low{border-color:rgba(92,184,92,0.3)}
+.heat-hdr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.heat-level{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.heat-level.high{background:var(--red-dim)}
+.heat-level.med{background:var(--amb-dim)}
+.heat-level.low{background:var(--neon-dim)}
+.heat-title{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px}
+.heat-sub{font-size:10px;color:var(--g2)}
+.heat-meter{height:8px;background:var(--g4);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.heat-fill{height:100%;border-radius:4px;transition:width 0.6s}
+.heat-tips{background:var(--bg3);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.heat-tip{font-size:11px;color:var(--g1);display:flex;align-items:flex-start;gap:6px}
+
+/* Weight gain trends */
+.weight-animal-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:8px}
+.weight-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.weight-trend{display:flex;align-items:center;gap:6px}
+.trend-arrow{font-size:16px;font-weight:700}
+.trend-arrow.up{color:var(--neon)}
+.trend-arrow.down{color:var(--red)}
+.trend-arrow.flat{color:var(--amb)}
+.weight-bars{display:flex;gap:4px;align-items:flex-end;height:44px}
+.wgt-bar{flex:1;border-radius:2px 2px 0 0;transition:height 0.4s;min-height:4px}
+.weight-months{display:flex;gap:4px;margin-top:3px}
+.weight-month-lbl{flex:1;font-size:8px;color:var(--g3);text-align:center}
+
+/* Feed efficiency */
+.feed-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:8px}
+.feed-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.feed-ratio-big{font-size:28px;font-weight:700;color:var(--neon)}
+.feed-ratio-label{font-size:10px;color:var(--g2);margin-top:2px}
+.feed-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.feed-stat{background:var(--bg3);border-radius:8px;padding:9px;text-align:center;border:1px solid var(--border2)}
+.feed-stat-val{font-size:15px;font-weight:700;color:var(--white)}
+.feed-stat-lbl{font-size:9px;color:var(--g3);margin-top:2px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase}
+
+/* Growth comparison */
+.growth-compare-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:8px}
+.growth-compare-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border2)}
+.growth-compare-row:last-child{border-bottom:none}
+.growth-animal-icon{font-size:22px;width:32px;text-align:center}
+.growth-info{flex:1}
+.growth-name{font-size:12px;font-weight:700;color:var(--white)}
+.growth-species{font-size:10px;color:var(--g2)}
+.growth-bar-wrap{flex:1}
+.growth-bar-bg{height:6px;background:var(--g4);border-radius:3px;overflow:hidden}
+.growth-bar-fg{height:100%;border-radius:3px;transition:width 0.6s}
+.growth-pct{font-size:11px;font-weight:700;color:var(--white);width:32px;text-align:right}
+.growth-delta{font-size:10px;width:38px;text-align:right;font-weight:600}
+.growth-delta.up{color:var(--neon)}
+.growth-delta.down{color:var(--red)}
+
+/* Farm routing */
+.route-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:8px}
+.route-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.route-icon{width:40px;height:40px;border-radius:10px;background:var(--neon-dim);border:1px solid rgba(92,184,92,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.route-title{font-size:13px;font-weight:700;color:var(--white)}
+.route-sub{font-size:10px;color:var(--g2);margin-top:1px}
+.route-steps{display:flex;flex-direction:column;gap:0}
+.route-step{display:flex;align-items:flex-start;gap:10px;padding:8px 0}
+.route-step:not(:last-child){border-bottom:1px solid var(--border2)}
+.route-step-num{width:22px;height:22px;border-radius:50%;background:var(--neon);color:#0c1008;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.route-step-num.warn{background:var(--amb)}
+.route-step-num.crit{background:var(--red)}
+.route-step-info{flex:1}
+.route-step-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px}
+.route-step-detail{font-size:10px;color:var(--g2);line-height:1.5}
+.route-step-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0;margin-top:2px}
+.route-step-badge.priority{background:var(--red-dim);color:var(--red)}
+.route-step-badge.check{background:var(--neon-dim);color:var(--neon)}
+.route-step-badge.feed{background:var(--amb-dim);color:var(--amb)}
+.route-map-placeholder{background:var(--bg3);border-radius:10px;padding:18px;text-align:center;border:1px dashed var(--border);margin-top:10px}
+.location-banner{background:var(--neon-dim);border:1px solid rgba(92,184,92,0.3);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.location-banner-icon{font-size:18px;flex-shrink:0}
+.location-banner-text{font-size:11px;color:var(--neon);font-weight:600;line-height:1.5}
+
+/* ── LOG FORM ── */
+.log-form-card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--neon);margin-bottom:10px}
+.log-form-title{font-size:13px;font-weight:700;color:var(--neon);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.log-fi{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--white);font-family:var(--font);font-size:13px;outline:none;transition:border-color 0.2s;-webkit-appearance:none}
+.log-fi:focus{border-color:var(--neon)}
+.log-fi::placeholder{color:var(--g3)}
+.log-fi-label{font-size:10px;font-weight:700;color:var(--g2);margin-bottom:5px;letter-spacing:0.5px;text-transform:uppercase}
+.log-field{margin-bottom:10px}
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.log-save-btn{width:100%;padding:12px;border-radius:10px;background:var(--neon);color:#fff;border:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.log-save-btn:active{opacity:0.8}
+.log-record{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:8px}
+.log-record-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.log-record-top{display:flex;align-items:center;gap:8px}
+.log-delete-btn{width:26px;height:26px;border-radius:50%;background:var(--red-dim);border:1px solid rgba(255,68,68,0.3);color:var(--red);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.log-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--neon-dim);color:var(--neon);border:1px solid rgba(92,184,92,0.2)}
+.log-tag.warn{background:var(--amb-dim);color:var(--amb);border-color:rgba(200,134,10,0.2)}
+.log-empty{text-align:center;padding:32px 20px;color:var(--g3);font-size:12px}
+.log-empty-icon{font-size:36px;opacity:0.3;margin-bottom:10px}
+
+/* ── WEIGHT NOTIFICATION ── */
+.weight-loss-alert{background:var(--red-dim);border:1px solid rgba(255,68,68,0.4);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.weight-gain-ok{background:var(--neon-dim);border:1px solid rgba(92,184,92,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+
+/* ── FARM ROUTE CHECKLIST ── */
+.route-progress-bar{height:8px;background:var(--g4);border-radius:4px;overflow:hidden;margin-bottom:4px}
+.route-progress-fill{height:100%;border-radius:4px;background:var(--neon);transition:width 0.5s ease;box-shadow:0 0 6px rgba(92,184,92,0.4)}
+.route-task{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border2)}
+.route-task:last-child{border-bottom:none}
+.route-task.done .route-task-title{text-decoration:line-through;color:var(--g3)}
+.route-task.done .route-task-detail{color:var(--g4)}
+.route-task-left{flex:1}
+.route-task-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px;display:flex;align-items:center;gap:7px}
+.route-task-detail{font-size:11px;color:var(--g2);line-height:1.5}
+.route-done-btn{padding:7px 14px;border-radius:20px;border:1.5px solid var(--neon);background:transparent;color:var(--neon);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all 0.2s;flex-shrink:0;align-self:center}
+.route-done-btn.completed{background:var(--neon-dim);border-color:var(--neon)}
+.route-done-btn:active{opacity:0.7}
+.route-task-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0;margin-left:4px}
+.route-task-badge.priority{background:var(--red-dim);color:var(--red)}
+.route-task-badge.check{background:var(--neon-dim);color:var(--neon)}
+.route-task-badge.feed{background:var(--amb-dim);color:var(--amb)}
+
+/* Section header */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-top:4px}
+.section-hdr-title{font-size:14px;font-weight:700;color:var(--white);display:flex;align-items:center;gap:7px}
+.section-hdr-count{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--neon-dim);color:var(--neon)}
+.mini-btn{padding:6px 12px;border-radius:8px;background:var(--bg3);color:var(--g2);border:1px solid var(--border);font-family:var(--font);font-size:10px;font-weight:700;cursor:pointer;letter-spacing:0.5px}
+.mini-btn:active{opacity:0.7}
+/* Climate badge */
+.climate-badge{display:flex;align-items:center;gap:8px;background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.25);border-radius:10px;padding:10px 13px;margin-bottom:10px}
+.climate-temp-big{font-size:28px;font-weight:700;color:var(--amb)}
+.climate-info{flex:1}
+.climate-label{font-size:12px;font-weight:700;color:var(--white)}
+.climate-detail{font-size:10px;color:var(--g2);margin-top:2px}
+.climate-thi{font-size:13px;font-weight:700;color:var(--red)}
+
 /* ── ADD ANIMAL CARD ── */
 .add-animal-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer}
 .add-animal-form{padding-top:2px}
@@ -507,6 +678,7 @@ body.light .topbar-title{color:#6b6b6b}
   <div class="scroll" id="view-dashboard" style="display:none"></div>
   <div class="scroll" id="view-analytics" style="display:none"></div>
   <div class="scroll" id="view-herd" style="display:none"></div>
+  <div class="scroll" id="view-care" style="display:none"></div>
   <div class="scroll" id="view-settings" style="display:none"></div>
 
   <!-- BOTTOM NAV -->
@@ -522,6 +694,10 @@ body.light .topbar-title{color:#6b6b6b}
     <div class="nav-item" id="nav-herd" onclick="showView('herd')">
       <div class="nav-icon"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
       <div class="nav-label">Herd</div>
+    </div>
+    <div class="nav-item" id="nav-care" onclick="showView('care')">
+      <div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="nav-label">Care</div>
     </div>
     <div class="nav-item" id="nav-settings" onclick="showView('settings')">
       <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
@@ -766,7 +942,7 @@ window.togglePass = function(id) {
 
 // ── VIEW SWITCHING ────────────────────────────────
 window.showView = function(view) {
-  ['dashboard','analytics','herd','settings'].forEach(v=>{
+  ['dashboard','analytics','herd','care','settings'].forEach(v=>{
     document.getElementById('view-'+v).style.display='none';
     document.getElementById('nav-'+v).classList.remove('on');
   });
@@ -774,12 +950,13 @@ window.showView = function(view) {
   document.getElementById('nav-'+view).classList.add('on');
   document.getElementById('pill-bar').style.display = view==='dashboard' ? 'flex' : 'none';
 
-  const titles={dashboard:'Dashboard',analytics:'Analytics',herd:'Herd',settings:'Settings'};
+  const titles={dashboard:'Dashboard',analytics:'Analytics',herd:'Herd',care:'Care Plan',settings:'Settings'};
   document.getElementById('topbar-title').textContent = titles[view];
 
   if(view==='dashboard') renderDashboard();
   else if(view==='analytics') renderAnalytics();
   else if(view==='herd') renderHerd();
+  else if(view==='care') renderCare();
   else if(view==='settings') renderSettings();
 };
 
@@ -1582,7 +1759,889 @@ window.saveProfileName = async function() {
   } catch(e) { t('Error saving name'); }
 };
 
-// ── HELPERS ───────────────────────────────────────
+// ── CARE VIEW ─────────────────────────────────────
+let careTab = 'vaccination';
+
+window.switchCareTab = function(tab) {
+  careTab = tab;
+  document.querySelectorAll('.care-tab').forEach(el => el.classList.toggle('act', el.dataset.tab === tab));
+  renderCareContent();
+};
+
+function renderCare() {
+  const view = document.getElementById('view-care');
+
+  // Real user — no device linked yet
+  if (!isDemo && !hasDevice) {
+    view.innerHTML = `<div class="no-device"><div class="no-device-icon">🩺</div><div class="no-device-title">No device linked yet</div><div class="no-device-sub">Link your GLA ear tag in Settings to unlock the Care Plan features — vaccinations, treatments, heat stress, weight trends and more.</div><button class="no-device-btn" onclick="showView('settings')">⚙️ Go to Settings</button></div>`;
+    return;
+  }
+
+  view.innerHTML = `
+    <div class="care-tabs" id="care-tab-bar">
+      <div class="care-tab act" data-tab="vaccination" onclick="switchCareTab('vaccination')">💉 Vaccines</div>
+      <div class="care-tab" data-tab="treatment" onclick="switchCareTab('treatment')">🩺 Treatment</div>
+      <div class="care-tab" data-tab="heat" onclick="switchCareTab('heat')">🌡️ Heat Stress</div>
+      <div class="care-tab" data-tab="weight" onclick="switchCareTab('weight')">⚖️ Weight</div>
+      <div class="care-tab" data-tab="feed" onclick="switchCareTab('feed')">🌾 Feed</div>
+      <div class="care-tab" data-tab="growth" onclick="switchCareTab('growth')">📈 Growth</div>
+      <div class="care-tab" data-tab="route" onclick="switchCareTab('route')">🗺️ Farm Route</div>
+    </div>
+    <div id="care-content"></div>
+  `;
+  careTab = 'vaccination';
+  renderCareContent();
+}
+
+function renderCareContent() {
+  const el = document.getElementById('care-content');
+  if (!el) return;
+  if (careTab === 'vaccination') el.innerHTML = renderVaccination();
+  else if (careTab === 'treatment') el.innerHTML = renderTreatment();
+  else if (careTab === 'heat') el.innerHTML = renderHeatStress();
+  else if (careTab === 'weight') el.innerHTML = renderWeightTrends();
+  else if (careTab === 'feed') el.innerHTML = renderFeedEfficiency();
+  else if (careTab === 'growth') el.innerHTML = renderGrowthComparison();
+  else if (careTab === 'route') el.innerHTML = renderFarmRoute();
+}
+
+// ── VACCINATION REMINDERS ──────────────────────────
+function getVaccinations(){return JSON.parse(localStorage.getItem('liid-vaccinations')||'[]');}
+function saveVaccinations(a){localStorage.setItem('liid-vaccinations',JSON.stringify(a));}
+
+function renderVaccination() {
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : (isDemo ? [{id:'demo-1',name:'Bessie',icon:'🐄',species:'Cattle'},{id:'demo-2',name:'Nanny',icon:'🐐',species:'Goat'},{id:'demo-3',name:'Max',icon:'🐎',species:'Horse'}] : []);
+  const animalOptions = allA.map(a=>`<option value="${a.id}">${a.icon||'🐄'} ${a.name}</option>`).join('');
+
+  // Real user — no animals in herd yet
+  if (!isDemo && allA.length === 0) {
+    return `
+      <div class="section-hdr"><div class="section-hdr-title">💉 Vaccination Schedule</div></div>
+      <div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb);line-height:1.6">
+        🌍 <strong>Port Harcourt, NG:</strong> Key vaccines — FMD, CBPP, Lumpy Skin, Brucellosis, Rabies, Tetanus.
+      </div>
+      <div class="log-empty"><div class="log-empty-icon">💉</div>No animals in herd yet.<br>Add your animals in the <strong>Herd</strong> tab first, then come back to schedule their vaccinations.</div>`;
+  }
+
+  // Demo mode: show hardcoded simulated records
+  if (isDemo) {
+    const vaccData = [
+      {vaccine:'FMD (Foot & Mouth)',animal:'Bessie',species:'Cattle',dueIn:-7,interval:'6 months'},
+      {vaccine:'Brucellosis',animal:'Nanny',species:'Goat',dueIn:14,interval:'Annual'},
+      {vaccine:'CBPP (Contagious Bovine)',animal:'Max',species:'Horse',dueIn:30,interval:'Annual'},
+      {vaccine:'Rabies',animal:'Bessie',species:'Cattle',dueIn:60,interval:'Annual'},
+      {vaccine:'Lumpy Skin Disease',animal:'Nanny',species:'Goat',dueIn:-3,interval:'Annual'},
+      {vaccine:'Tetanus Toxoid',animal:'Max',species:'Horse',dueIn:90,interval:'2 years'},
+    ];
+    const cards = vaccData.map((v,i) => {
+      const a = allA[i % allA.length];
+      const overdue = v.dueIn < 0;
+      const soon = v.dueIn >= 0 && v.dueIn <= 21;
+      const cls = overdue ? 'overdue' : soon ? 'due' : 'ok';
+      const icon = overdue ? '⚠️' : soon ? '🔔' : '✅';
+      const dateLabel = overdue ? `Overdue by ${Math.abs(v.dueIn)} days` : v.dueIn===0 ? 'Due today!' : `Due in ${v.dueIn} days`;
+      const badge = overdue ? 'OVERDUE' : soon ? 'DUE SOON' : 'SCHEDULED';
+      return `<div class="vacc-card">
+        <div class="vacc-icon ${cls}">${icon}</div>
+        <div class="vacc-info">
+          <div class="vacc-name">${v.vaccine}</div>
+          <div class="vacc-animal">${a.name} · ${a.species} · Every ${v.interval}</div>
+          <div class="vacc-date ${cls}">${dateLabel}</div>
+        </div>
+        <div class="vacc-badge ${cls}">${badge}</div>
+      </div>`;
+    }).join('');
+    const overdue = vaccData.filter(v=>v.dueIn<0).length;
+    const soon2 = vaccData.filter(v=>v.dueIn>=0&&v.dueIn<=21).length;
+    return `
+      <div class="section-hdr">
+        <div class="section-hdr-title">💉 Vaccination Reminders</div>
+        ${overdue>0?`<div class="section-hdr-count" style="background:var(--red-dim);color:var(--red)">${overdue} OVERDUE</div>`:`<div class="section-hdr-count">${soon2} soon</div>`}
+      </div>
+      <div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb);line-height:1.6">
+        🌍 <strong>Port Harcourt, NG:</strong> FMD, CBPP, Lumpy Skin and Brucellosis are endemic. Rainy season increases tick-borne disease risk. <em>(Demo data)</em>
+      </div>
+      ${cards}`;
+  }
+
+  // Real mode: use localStorage records only
+  const records = getVaccinations().sort((a,b)=>{
+    // Sort by soonest due date
+    const dA = new Date(a.nextDue), dB = new Date(b.nextDue);
+    return dA - dB;
+  });
+  const today = new Date(); today.setHours(0,0,0,0);
+  const overdue = records.filter(r=>new Date(r.nextDue)<today).length;
+  const soon = records.filter(r=>{const d=new Date(r.nextDue);return d>=today&&(d-today)/(86400000)<=21;}).length;
+
+  const cards = records.map((r,i) => {
+    const animal = allA.find(a=>a.id===r.animalId)||{icon:'🐄',name:r.animalName||'Unknown',species:''};
+    const dueDate = new Date(r.nextDue); dueDate.setHours(0,0,0,0);
+    const diffDays = Math.round((dueDate - today) / 86400000);
+    const isOverdue = diffDays < 0;
+    const isSoon = diffDays >= 0 && diffDays <= 21;
+    const cls = isOverdue ? 'overdue' : isSoon ? 'due' : 'ok';
+    const icon = isOverdue ? '⚠️' : isSoon ? '🔔' : '✅';
+    const dateLabel = isOverdue ? `Overdue by ${Math.abs(diffDays)} days` : diffDays===0 ? 'Due today!' : `Due in ${diffDays} days`;
+    const badge = isOverdue ? 'OVERDUE' : isSoon ? 'DUE SOON' : 'SCHEDULED';
+    return `<div class="vacc-card">
+      <div class="vacc-icon ${cls}">${icon}</div>
+      <div class="vacc-info">
+        <div class="vacc-name">${r.vaccine}</div>
+        <div class="vacc-animal">${animal.icon||'🐄'} ${animal.name} · ${r.interval||'Annual'}</div>
+        <div class="vacc-date ${cls}">${dateLabel} · ${r.nextDue}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">
+        <div class="vacc-badge ${cls}">${badge}</div>
+        <button class="log-delete-btn" onclick="deleteVaccination(${i})" style="width:22px;height:22px;font-size:10px">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="section-hdr">
+      <div class="section-hdr-title">💉 Vaccination Schedule</div>
+      ${overdue>0?`<div class="section-hdr-count" style="background:var(--red-dim);color:var(--red)">${overdue} OVERDUE</div>`:records.length>0?`<div class="section-hdr-count">${soon} soon</div>`:''}
+    </div>
+    <div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb);line-height:1.6">
+      🌍 <strong>Port Harcourt, NG:</strong> Key vaccines — FMD, CBPP, Lumpy Skin, Brucellosis, Rabies, Tetanus. Log each animal's schedule below.
+    </div>
+    <!-- ADD FORM -->
+    <div class="log-form-card">
+      <div class="log-form-title">💉 Add Vaccination Reminder</div>
+      <div class="log-field">
+        <div class="log-fi-label">Animal</div>
+        <select class="log-fi" id="vacc-animal">
+          <option value="">Select animal...</option>
+          ${animalOptions}
+        </select>
+      </div>
+      <div class="log-field">
+        <div class="log-fi-label">Vaccine Name</div>
+        <input class="log-fi" id="vacc-name-input" type="text" placeholder="e.g. FMD, Brucellosis, Lumpy Skin...">
+      </div>
+      <div class="log-grid">
+        <div>
+          <div class="log-fi-label">Next Due Date</div>
+          <input class="log-fi" id="vacc-due" type="date" value="${todayStr()}">
+        </div>
+        <div>
+          <div class="log-fi-label">Repeat Every</div>
+          <select class="log-fi" id="vacc-interval">
+            <option value="6 months">6 months</option>
+            <option value="Annual" selected>Annual</option>
+            <option value="2 years">2 years</option>
+            <option value="Once">Once only</option>
+          </select>
+        </div>
+      </div>
+      <button class="log-save-btn" onclick="addVaccination()">✓ Save Vaccination Reminder</button>
+    </div>
+    ${records.length === 0
+      ? `<div class="log-empty"><div class="log-empty-icon">💉</div>No vaccinations scheduled yet.<br>Add your first reminder using the form above.</div>`
+      : cards}
+  `;
+}
+
+window.addVaccination = function() {
+  const animalId = document.getElementById('vacc-animal')?.value;
+  const vaccine = document.getElementById('vacc-name-input')?.value.trim();
+  const nextDue = document.getElementById('vacc-due')?.value;
+  const interval = document.getElementById('vacc-interval')?.value;
+  if(!animalId){t('Select an animal first','err');return;}
+  if(!vaccine){t('Enter the vaccine name','err');return;}
+  if(!nextDue){t('Select a due date','err');return;}
+  const allA = getAllAnimals();
+  const animal = allA.find(a=>a.id===animalId);
+  const arr = getVaccinations();
+  arr.push({animalId, animalName:animal?.name||'', vaccine, nextDue, interval});
+  saveVaccinations(arr);
+  t('✅ Vaccination added for '+animal?.name,'ok');
+  renderCareContent();
+};
+
+window.deleteVaccination = function(visibleIdx) {
+  const records = getVaccinations().sort((a,b)=>new Date(a.nextDue)-new Date(b.nextDue));
+  const record = records[visibleIdx];
+  const all = getVaccinations();
+  const realIdx = all.findIndex(r=>JSON.stringify(r)===JSON.stringify(record));
+  if(realIdx>=0){all.splice(realIdx,1);saveVaccinations(all);}
+  t('Deleted');
+  renderCareContent();
+};
+
+// ── STORAGE HELPERS ───────────────────────────────
+function getTreatments(){return JSON.parse(localStorage.getItem('liid-treatments')||'[]');}
+function saveTreatments(a){localStorage.setItem('liid-treatments',JSON.stringify(a));}
+function getWeights(){return JSON.parse(localStorage.getItem('liid-weights')||'{}');}
+function saveWeights(o){localStorage.setItem('liid-weights',JSON.stringify(o));}
+function getFeedLog(){return JSON.parse(localStorage.getItem('liid-feed')||'{}');}
+function saveFeedLog(o){localStorage.setItem('liid-feed',JSON.stringify(o));}
+function getRouteState(){
+  const today=new Date().toISOString().split('T')[0];
+  const raw=JSON.parse(localStorage.getItem('liid-route')||'{}');
+  if(raw.date!==today)return{date:today,completed:[]};
+  return raw;
+}
+function saveRouteState(s){localStorage.setItem('liid-route',JSON.stringify(s));}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function monthStr(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;}
+
+// ── TREATMENT HISTORY ──────────────────────────────
+function renderTreatment() {
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : (isDemo ? [{id:'demo-1',name:'Bessie',icon:'🐄',species:'Cattle'},{id:'demo-2',name:'Nanny',icon:'🐐',species:'Goat'},{id:'demo-3',name:'Max',icon:'🐎',species:'Horse'}] : []);
+
+  // Real user — no animals yet
+  if (!isDemo && allA.length === 0) {
+    return `
+      <div class="section-hdr"><div class="section-hdr-title">🩺 Treatment Log</div></div>
+      <div class="log-empty"><div class="log-empty-icon">💊</div>No animals in herd yet.<br>Add your animals in the <strong>Herd</strong> tab first, then log their treatments here.</div>`;
+  }
+
+  const animalOptions = allA.map(a=>`<option value="${a.id}">${a.icon||'🐄'} ${a.name} (${a.species||'Cattle'})</option>`).join('');
+  const records = getTreatments().sort((a,b)=>b.date.localeCompare(a.date));
+  const cards = records.length === 0
+    ? `<div class="log-empty"><div class="log-empty-icon">💊</div>No treatments logged yet.<br>Use the form above to log today's medication.</div>`
+    : records.map((r,i) => {
+      const animal = allA.find(a=>a.id===r.animalId) || {icon:'🐄',name:r.animalName||'Unknown'};
+      const isToday = r.date === todayStr();
+      return `<div class="log-record">
+        <div class="log-record-hdr">
+          <div class="log-record-top">
+            <span style="font-size:20px">${animal.icon||'🐄'}</span>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--white)">${animal.name}</div>
+              <div style="font-size:10px;color:var(--g3)">${r.date}${isToday?' · Today':''}</div>
+            </div>
+          </div>
+          <button class="log-delete-btn" onclick="deleteTreatment(${i})">✕</button>
+        </div>
+        <div class="treat-rows">
+          <div class="treat-row"><div class="treat-row-icon">💊</div><span style="font-weight:600;color:var(--white)">${r.drug}</span></div>
+          <div class="treat-row"><div class="treat-row-icon">⚖️</div><span>${r.grams}g given today</span></div>
+          ${r.notes?`<div class="treat-row"><div class="treat-row-icon">📋</div><span>${r.notes}</span></div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  return `
+    <div class="section-hdr">
+      <div class="section-hdr-title">🩺 Daily Treatment Log</div>
+      <div class="section-hdr-count">${records.length} records</div>
+    </div>
+    <!-- LOG FORM -->
+    <div class="log-form-card">
+      <div class="log-form-title">💊 Log Today's Treatment</div>
+      <div class="log-field">
+        <div class="log-fi-label">Animal</div>
+        <select class="log-fi" id="treat-animal">
+          <option value="">Select animal...</option>
+          ${animalOptions}
+        </select>
+      </div>
+      <div class="log-field">
+        <div class="log-fi-label">Drug / Medication Name</div>
+        <input class="log-fi" id="treat-drug" type="text" placeholder="e.g. Oxytetracycline, Ivermectin...">
+      </div>
+      <div class="log-grid">
+        <div>
+          <div class="log-fi-label">Amount (grams)</div>
+          <input class="log-fi" id="treat-grams" type="number" placeholder="0" min="0" step="0.1">
+        </div>
+        <div>
+          <div class="log-fi-label">Date</div>
+          <input class="log-fi" id="treat-date" type="date" value="${todayStr()}">
+        </div>
+      </div>
+      <div class="log-field">
+        <div class="log-fi-label">Notes (optional)</div>
+        <input class="log-fi" id="treat-notes" type="text" placeholder="Reason, vet name, observations...">
+      </div>
+      <button class="log-save-btn" onclick="logTreatment()">✓ Save Treatment Entry</button>
+    </div>
+    ${cards}
+  `;
+}
+
+window.logTreatment = function() {
+  const animalId = document.getElementById('treat-animal')?.value;
+  const drug = document.getElementById('treat-drug')?.value.trim();
+  const grams = document.getElementById('treat-grams')?.value;
+  const date = document.getElementById('treat-date')?.value || todayStr();
+  const notes = document.getElementById('treat-notes')?.value.trim();
+  if(!animalId){t('Select an animal first','err');return;}
+  if(!drug){t('Enter drug/medication name','err');return;}
+  if(!grams||isNaN(+grams)||+grams<=0){t('Enter a valid amount in grams','err');return;}
+  const allA = getAllAnimals();
+  const animal = allA.find(a=>a.id===animalId);
+  const record = {animalId, animalName:animal?.name||'', drug, grams:+grams, date, notes};
+  const arr = getTreatments();
+  arr.unshift(record);
+  saveTreatments(arr);
+  t('✅ Treatment logged for '+animal?.name,'ok');
+  renderCareContent();
+};
+
+window.deleteTreatment = function(idx) {
+  const arr = getTreatments();
+  const sorted = [...arr].sort((a,b)=>b.date.localeCompare(a.date));
+  const record = sorted[idx];
+  const realIdx = arr.findIndex(r=>r===record||JSON.stringify(r)===JSON.stringify(record));
+  if(realIdx>=0){arr.splice(realIdx,1);saveTreatments(arr);}
+  t('Deleted');
+  renderCareContent();
+};
+
+// ── HEAT STRESS ALERTS ─────────────────────────────
+function renderHeatStress() {
+  const animals = getAllAnimals();
+  // Port Harcourt climate context — hot & humid
+  if (!isDemo && animals.length === 0) {
+    return `
+      <div class="climate-badge">
+        <div><div class="climate-temp-big">34°C</div><div style="font-size:9px;color:var(--g3);font-weight:600">AMBIENT</div></div>
+        <div class="climate-info">
+          <div class="climate-label">📍 Port Harcourt, Nigeria</div>
+          <div class="climate-detail">Humidity: 78% · THI: <span class="climate-thi">83</span></div>
+          <div style="font-size:11px;color:var(--red);font-weight:700;margin-top:3px">🔴 Severe Heat Stress Risk</div>
+        </div>
+      </div>
+      <div class="log-empty"><div class="log-empty-icon">🌡️</div>No animals to monitor yet.<br>Add animals in the Herd tab to see heat stress data.</div>`;
+  }
+  const ambientTemp = 34;
+  const humidity = 78; // % typical
+  const THI = Math.round(ambientTemp - (0.55 - 0.0055 * humidity) * (ambientTemp - 14.5));
+  const heatLevel = THI >= 79 ? 'high' : THI >= 72 ? 'med' : 'low';
+  const heatLabel = THI >= 79 ? 'Severe Heat Stress' : THI >= 72 ? 'Moderate Heat Stress' : 'Low Heat Risk';
+  const heatIcon = THI >= 79 ? '🔴' : THI >= 72 ? '🟡' : '🟢';
+  const animalCards = (animals.length > 0 ? animals : (isDemo ? [{name:'Bessie',icon:'🐄',species:'Cattle',temp:39.2},{name:'Nanny',icon:'🐐',species:'Goat',temp:40.1}] : [])).filter(a => {
+    // For real users, only show animals that have received at least one real reading (temp > 0)
+    if (!isDemo && (a.temp === 0 || a.temp === undefined || a.temp === null)) return false;
+    return true;
+  }).map(a => {
+    const bodyStress = a.temp > 39.5 ? 'high' : a.temp > 39.0 ? 'med' : 'low';
+    const stressLabel = bodyStress === 'high' ? 'High Body Heat' : bodyStress === 'med' ? 'Watch' : 'Normal';
+    const pct = Math.min(100, Math.round(((a.temp - 37) / 4) * 100));
+    return `<div class="heat-alert-card ${bodyStress}">
+      <div class="heat-hdr">
+        <div class="heat-level ${bodyStress}">${a.icon||'🐄'}</div>
+        <div style="flex:1">
+          <div class="heat-title">${a.name} — ${stressLabel}</div>
+          <div class="heat-sub">Body temp: <strong style="color:var(--amb)">${(a.temp||38.5).toFixed(1)}°C</strong> · ${a.species||'Cattle'}</div>
+        </div>
+      </div>
+      <div class="heat-meter"><div class="heat-fill" style="width:${pct}%;background:${bodyStress==='high'?'var(--red)':bodyStress==='med'?'var(--amb)':'var(--neon)'}"></div></div>
+      <div class="heat-tips">
+        ${bodyStress==='high'?`<div class="heat-tip">🚿 <span>Immediately mist or wet the animal with cool water</span></div><div class="heat-tip">🏠 <span>Move to shaded, ventilated shelter right away</span></div><div class="heat-tip">💧 <span>Provide cold, fresh water at all times</span></div>`:
+        bodyStress==='med'?`<div class="heat-tip">🌬️ <span>Increase airflow and provide shade</span></div><div class="heat-tip">💧 <span>Ensure continuous access to fresh water</span></div>`:
+        `<div class="heat-tip">✅ <span>Body temperature within safe range</span></div>`}
+      </div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="climate-badge">
+      <div>
+        <div class="climate-temp-big">${ambientTemp}°C</div>
+        <div style="font-size:9px;color:var(--g3);font-weight:600">AMBIENT</div>
+      </div>
+      <div class="climate-info">
+        <div class="climate-label">📍 Port Harcourt, Nigeria</div>
+        <div class="climate-detail">Humidity: ${humidity}% · THI: <span class="climate-thi">${THI}</span></div>
+        <div style="font-size:11px;color:${heatLevel==='high'?'var(--red)':heatLevel==='med'?'var(--amb)':'var(--neon)'};font-weight:700;margin-top:3px">${heatIcon} ${heatLabel}</div>
+      </div>
+    </div>
+    <div class="section-hdr" style="margin-top:4px">
+      <div class="section-hdr-title">🌡️ Animal Heat Status</div>
+    </div>
+    ${animalCards || (!isDemo ? `<div class="log-empty" style="padding:30px 20px"><div class="log-empty-icon" style="font-size:32px">⏳</div>Waiting for live temperature readings.<br><span style="font-size:11px;color:var(--g3)">Body heat status will appear here once your ESP32-C3 ear tags start sending data.</span></div>` : '')}
+    <div class="route-card" style="margin-top:4px">
+      <div class="route-hdr">
+        <div class="route-icon">☀️</div>
+        <div>
+          <div class="route-title">Heat Management — Port Harcourt</div>
+          <div class="route-sub">Tropical climate recommendations</div>
+        </div>
+      </div>
+      <div class="heat-tips">
+        <div class="heat-tip">⏰ <span>Schedule grazing 6–9 AM and after 5 PM to avoid peak heat (11 AM–3 PM)</span></div>
+        <div class="heat-tip">🌳 <span>Ensure shade structures cover at least 4 m² per animal</span></div>
+        <div class="heat-tip">💧 <span>Offer 60–80 L of water per cattle per day in this climate</span></div>
+        <div class="heat-tip">🐄 <span>Monitor dry matter intake — heat stress reduces feed intake by 10–20%</span></div>
+        <div class="heat-tip">🔋 <span>Solar-powered misters or fans reduce heat stress significantly</span></div>
+      </div>
+    </div>
+  `;
+}
+
+// ── WEIGHT GAIN TRENDS ─────────────────────────────
+function renderWeightTrends() {
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : (isDemo ? [{id:'demo-1',name:'Bessie',icon:'🐄',species:'Cattle'},{id:'demo-2',name:'Nanny',icon:'🐐',species:'Goat'},{id:'demo-3',name:'Max',icon:'🐎',species:'Horse'}] : []);
+  if (!isDemo && allA.length === 0) {
+    return `<div class="log-empty" style="padding:60px 20px"><div class="log-empty-icon">⚖️</div>No animals in herd yet.<br>Add animals in the Herd tab first.</div>`;
+  }
+  const animalOptions = allA.map(a=>`<option value="${a.id}">${a.icon||'🐄'} ${a.name}</option>`).join('');
+  const weightData = getWeights();
+
+  // Build per-animal cards
+  const cards = allA.map(a => {
+    const history = (weightData[a.id] || []).sort((x,y)=>x.month.localeCompare(y.month)).slice(-6);
+    const hasCurrent = history.length > 0;
+    const currentEntry = hasCurrent ? history[history.length-1] : null;
+    const prevEntry = history.length >= 2 ? history[history.length-2] : null;
+    const currentW = currentEntry?.weight || null;
+    const prevW = prevEntry?.weight || null;
+    const diff = (currentW && prevW) ? (currentW - prevW) : null;
+    const lostWeight = diff !== null && diff < 0;
+    const gainDir = diff === null ? 'flat' : diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+    const maxW = history.length > 0 ? Math.max(...history.map(e=>e.weight)) : 1;
+    const minW = history.length > 0 ? Math.min(...history.map(e=>e.weight)) : 0;
+    const shortMonths = history.map(e=>e.month.slice(5)); // MM only
+
+    let alertHTML = '';
+    if (lostWeight) {
+      alertHTML = `<div class="weight-loss-alert" style="margin-bottom:8px">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ Weight Loss Detected — ${a.name} lost ${Math.abs(diff).toFixed(1)} kg this month</div>
+        <div style="font-size:11px;color:var(--g1);line-height:1.7">
+          <div>🩺 <strong>Check for illness</strong> — inspect for fever, lethargy, diarrhoea, or parasites</div>
+          <div>🌾 <strong>Review feed intake</strong> — ensure sufficient daily dry matter (DMI)</div>
+          <div>💧 <strong>Verify water access</strong> — dehydration reduces feed consumption</div>
+          <div>👨‍⚕️ <strong>Consult your vet</strong> if weight continues declining next month</div>
+        </div>
+      </div>`;
+    } else if (diff !== null && diff > 0) {
+      alertHTML = `<div class="weight-gain-ok" style="margin-bottom:8px">
+        <div style="font-size:12px;font-weight:700;color:var(--neon)">✅ ${a.name} gained ${diff.toFixed(1)} kg this month — on track!</div>
+      </div>`;
+    }
+
+    return `<div class="weight-animal-card">
+      <div class="weight-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:22px">${a.icon||'🐄'}</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--white)">${a.name}</div>
+            <div style="font-size:10px;color:var(--g2)">${a.species||'Cattle'}</div>
+          </div>
+        </div>
+        <div class="weight-trend">
+          ${currentW ? `<div style="text-align:right">
+            <div style="font-size:18px;font-weight:700;color:var(--white)">${currentW} kg</div>
+            <div style="font-size:10px;color:var(--g3)">${currentEntry.month}</div>
+          </div>
+          ${diff !== null ? `<div class="trend-arrow ${gainDir}">${gainDir==='up'?'↑':gainDir==='down'?'↓':'→'} ${Math.abs(diff).toFixed(1)}kg</div>` : ''}` : `<div style="font-size:11px;color:var(--g3)">No data yet</div>`}
+        </div>
+      </div>
+      ${alertHTML}
+      ${history.length > 0 ? `<div class="weight-bars">
+        ${history.map(e=>`<div class="wgt-bar" style="height:${Math.round(8+36*((e.weight-minW)/(maxW-minW||1)))}px;background:${e.weight===currentW&&lostWeight?'var(--red)':'var(--neon)'}"></div>`).join('')}
+      </div>
+      <div class="weight-months">${shortMonths.map(m=>`<div class="weight-month-lbl">${m}</div>`).join('')}</div>` : `<div style="font-size:11px;color:var(--g3);text-align:center;padding:14px 0">Log the first monthly weight entry below ↓</div>`}
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="section-hdr">
+      <div class="section-hdr-title">⚖️ Monthly Weight Trends</div>
+      <div class="section-hdr-count">${allA.length} animals</div>
+    </div>
+    <div style="font-size:11px;color:var(--g2);margin-bottom:10px;line-height:1.6">Update each animal's weight once a month. The app will notify you if any animal loses weight.</div>
+    <!-- UPDATE FORM -->
+    <div class="log-form-card">
+      <div class="log-form-title">⚖️ Log Monthly Weight</div>
+      <div class="log-grid">
+        <div>
+          <div class="log-fi-label">Animal</div>
+          <select class="log-fi" id="wgt-animal">
+            <option value="">Select...</option>
+            ${animalOptions}
+          </select>
+        </div>
+        <div>
+          <div class="log-fi-label">Month</div>
+          <input class="log-fi" id="wgt-month" type="month" value="${monthStr()}">
+        </div>
+      </div>
+      <div class="log-field">
+        <div class="log-fi-label">Current Weight (kg)</div>
+        <input class="log-fi" id="wgt-value" type="number" placeholder="e.g. 325" min="1" step="0.1">
+      </div>
+      <button class="log-save-btn" onclick="logWeight()">✓ Save Weight Entry</button>
+    </div>
+    ${cards}
+  `;
+}
+
+window.logWeight = function() {
+  const animalId = document.getElementById('wgt-animal')?.value;
+  const month = document.getElementById('wgt-month')?.value || monthStr();
+  const weightVal = document.getElementById('wgt-value')?.value;
+  if(!animalId){t('Select an animal first','err');return;}
+  if(!weightVal||isNaN(+weightVal)||+weightVal<=0){t('Enter a valid weight in kg','err');return;}
+  const allData = getWeights();
+  if(!allData[animalId]) allData[animalId] = [];
+  const existingIdx = allData[animalId].findIndex(e=>e.month===month);
+  if(existingIdx>=0) allData[animalId][existingIdx].weight = +weightVal;
+  else allData[animalId].push({month, weight:+weightVal});
+  saveWeights(allData);
+  const allA = getAllAnimals();
+  const animal = allA.find(a=>a.id===animalId);
+  // Check if this update shows a weight loss vs previous month
+  const history = allData[animalId].sort((a,b)=>a.month.localeCompare(b.month));
+  const idx = history.findIndex(e=>e.month===month);
+  if(idx>0){
+    const prev = history[idx-1].weight;
+    const curr = +weightVal;
+    if(curr<prev){
+      t('⚠️ '+(animal?.name||'Animal')+' lost weight! Check health.','err');
+    } else {
+      t('✅ Weight updated for '+(animal?.name||'animal'),'ok');
+    }
+  } else {
+    t('✅ Weight logged for '+(animal?.name||'animal'),'ok');
+  }
+  renderCareContent();
+};
+
+// ── FEED EFFICIENCY ────────────────────────────────
+function renderFeedEfficiency() {
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : (isDemo ? [{id:'demo-1',name:'Bessie',icon:'🐄',species:'Cattle'},{id:'demo-2',name:'Nanny',icon:'🐐',species:'Goat'},{id:'demo-3',name:'Max',icon:'🐎',species:'Horse'}] : []);
+  if (!isDemo && allA.length === 0) {
+    return `<div class="log-empty" style="padding:60px 20px"><div class="log-empty-icon">🌾</div>No animals in herd yet.<br>Add animals in the Herd tab first.</div>`;
+  }
+  const animalOptions = allA.map(a=>`<option value="${a.id}">${a.icon||'🐄'} ${a.name}</option>`).join('');
+  const feedData = getFeedLog();
+  const optimal = {Cattle:6.5, Goat:4.5, Sheep:5.0, Horse:3.5, Pig:2.8};
+
+  const cards = allA.map(a => {
+    const entries = (feedData[a.id] || []).sort((x,y)=>y.date.localeCompare(x.date));
+    const totalFeed = entries.reduce((s,e)=>s+e.feedKg,0);
+    const totalGain = entries.reduce((s,e)=>s+e.gainKg,0);
+    const fcr = totalGain > 0 ? (totalFeed / totalGain) : null;
+    const opt = optimal[a.species||'Cattle'] || 6.5;
+    const eff = fcr ? Math.min(100, Math.round((opt / fcr) * 100)) : null;
+    const effClass = eff===null ? 'g2' : eff>=85 ? 'neon' : eff>=70 ? 'amb' : 'red';
+    const recentEntries = entries.slice(0,3);
+
+    return `<div class="feed-card">
+      <div class="feed-hdr">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:28px">${a.icon||'🐄'}</span>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--white)">${a.name}</div>
+            <div style="font-size:10px;color:var(--g2)">${a.species||'Cattle'} · ${entries.length} entries</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="feed-ratio-big" style="color:${fcr===null?'var(--g2)':'var(--neon)'}">${fcr!==null?fcr.toFixed(1)+':1':'—:—'}</div>
+          <div class="feed-ratio-label">FCR (Feed:Gain)</div>
+        </div>
+      </div>
+      ${eff !== null ? `<div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g2);margin-bottom:4px">
+          <span>Efficiency vs optimal (${opt}:1)</span>
+          <span style="color:var(--${effClass})">${eff}%</span>
+        </div>
+        <div class="heat-meter"><div class="heat-fill" style="width:${eff}%;background:var(--${effClass})"></div></div>
+      </div>` : `<div style="font-size:11px;color:var(--g3);text-align:center;padding:10px 0">No data yet — log feed entries below ↓</div>`}
+      ${recentEntries.length > 0 ? `<div style="margin-top:6px">
+        <div style="font-size:10px;font-weight:700;color:var(--g2);margin-bottom:6px;letter-spacing:0.5px">RECENT ENTRIES</div>
+        ${recentEntries.map(e=>`<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--g2);padding:4px 0;border-bottom:1px solid var(--border2)">
+          <span>${e.date}</span>
+          <span>Feed: <strong style="color:var(--blue)">${e.feedKg}kg</strong></span>
+          <span>Gain: <strong style="color:var(--neon)">${e.gainKg}kg</strong></span>
+        </div>`).join('')}
+      </div>` : ''}
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="section-hdr">
+      <div class="section-hdr-title">🌾 Feed Efficiency (FCR)</div>
+    </div>
+    <div style="font-size:11px;color:var(--g2);margin-bottom:10px;line-height:1.6">FCR = kg feed ÷ kg weight gain · Lower FCR = better efficiency. Log daily feed and gain to calculate.</div>
+    <!-- INPUT FORM -->
+    <div class="log-form-card">
+      <div class="log-form-title">🌾 Log Feed Entry</div>
+      <div class="log-grid">
+        <div>
+          <div class="log-fi-label">Animal</div>
+          <select class="log-fi" id="feed-animal">
+            <option value="">Select...</option>
+            ${animalOptions}
+          </select>
+        </div>
+        <div>
+          <div class="log-fi-label">Date</div>
+          <input class="log-fi" id="feed-date" type="date" value="${todayStr()}">
+        </div>
+      </div>
+      <div class="log-grid">
+        <div>
+          <div class="log-fi-label">Feed Given (kg)</div>
+          <input class="log-fi" id="feed-amount" type="number" placeholder="e.g. 12.5" min="0" step="0.1">
+        </div>
+        <div>
+          <div class="log-fi-label">Weight Gain (kg)</div>
+          <input class="log-fi" id="feed-gain" type="number" placeholder="e.g. 0.4" min="0" step="0.01">
+        </div>
+      </div>
+      <button class="log-save-btn" onclick="logFeedEntry()">✓ Save Feed Entry</button>
+    </div>
+    ${cards}
+    <div class="route-card">
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:8px">🌍 Feed Tips for Port Harcourt Climate</div>
+      <div class="heat-tips">
+        <div class="heat-tip">🌿 <span>Supplement with dry-season roughage (cassava leaves, groundnut haulms) during harmattan</span></div>
+        <div class="heat-tip">🕕 <span>Feed in cooler hours (early morning / evening) to improve intake during heat stress</span></div>
+        <div class="heat-tip">🧂 <span>Add mineral lick blocks — high humidity leaches minerals from soil & forages</span></div>
+      </div>
+    </div>
+  `;
+}
+
+window.logFeedEntry = function() {
+  const animalId = document.getElementById('feed-animal')?.value;
+  const date = document.getElementById('feed-date')?.value || todayStr();
+  const feedKg = +document.getElementById('feed-amount')?.value;
+  const gainKg = +document.getElementById('feed-gain')?.value;
+  if(!animalId){t('Select an animal first','err');return;}
+  if(!feedKg||feedKg<=0){t('Enter feed amount in kg','err');return;}
+  if(isNaN(gainKg)||gainKg<0){t('Enter weight gain (0 or more)','err');return;}
+  const all = getFeedLog();
+  if(!all[animalId]) all[animalId] = [];
+  all[animalId].unshift({date, feedKg, gainKg});
+  saveFeedLog(all);
+  const allA = getAllAnimals();
+  const animal = allA.find(a=>a.id===animalId);
+  t('✅ Feed entry saved for '+(animal?.name||'animal'),'ok');
+  renderCareContent();
+};
+
+// ── GROWTH COMPARISON ──────────────────────────────
+function renderGrowthComparison() {
+  const animals = getAllAnimals();
+  // Real mode with no animals — show empty state
+  if (!isDemo && animals.length === 0) {
+    return `<div class="log-empty" style="padding:60px 20px"><div class="log-empty-icon">📈</div>No animals in herd yet.<br>Add animals in the Herd tab to see growth comparisons.</div>`;
+  }
+  // Real mode with animals — build from weight log data
+  if (!isDemo) {
+    const weightData = getWeights();
+    const currentMonth = monthStr();
+    const rows = animals.map(a => {
+      const history = (weightData[a.id]||[]).sort((x,y)=>x.month.localeCompare(y.month));
+      const curr = history.find(e=>e.month===currentMonth);
+      const prev = history.length >= 2 ? history[history.length-2] : null;
+      if (!curr) return `<div class="growth-compare-row">
+        <div class="growth-animal-icon">${a.icon||'🐄'}</div>
+        <div class="growth-info"><div class="growth-name">${a.name}</div><div class="growth-species">${a.species||'Cattle'}</div></div>
+        <div style="font-size:11px;color:var(--g3);flex:1;text-align:center">No weight logged this month</div>
+      </div>`;
+      const delta = prev ? (curr.weight - prev.weight) : null;
+      const deltaDir = delta === null ? '' : delta > 0 ? 'up' : 'down';
+      return `<div class="growth-compare-row">
+        <div class="growth-animal-icon">${a.icon||'🐄'}</div>
+        <div class="growth-info"><div class="growth-name">${a.name}</div><div class="growth-species">${a.species||'Cattle'}</div></div>
+        <div style="font-size:14px;font-weight:700;color:var(--white);margin-right:8px">${curr.weight} kg</div>
+        ${delta!==null?`<div class="growth-delta ${deltaDir}">${delta>0?'+':''}${delta.toFixed(1)} kg</div>`:''}
+      </div>`;
+    }).join('');
+    const hasAnyData = animals.some(a=>(weightData[a.id]||[]).length>0);
+    return `
+      <div class="section-hdr">
+        <div class="section-hdr-title">📈 Growth Comparison</div>
+        <div class="section-hdr-count">${new Date().toLocaleString('default',{month:'long'})}</div>
+      </div>
+      ${!hasAnyData ? `<div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb)">⚖️ Log monthly weights in the Weight tab to see growth comparison data here.</div>` : ''}
+      <div class="growth-compare-card">${rows}</div>
+    `;
+  }
+  const allA = animals.length > 0 ? animals : [{name:'Bessie',icon:'🐄',species:'Cattle'},{name:'Nanny',icon:'🐐',species:'Goat'},{name:'Max',icon:'🐎',species:'Horse'}];
+  const currentMonth = new Date().toLocaleString('default',{month:'long'});
+  const baseScores = [88,72,95,64,81,90,77];
+  const rows = allA.map((a,i) => {
+    const score = baseScores[i%baseScores.length] + Math.round((Math.random()-0.5)*6);
+    const prev = score + Math.round((Math.random()-0.5)*8);
+    const delta = score - prev;
+    const deltaDir = delta > 0 ? 'up' : 'down';
+    const col = score >= 85 ? 'var(--neon)' : score >= 70 ? 'var(--amb)' : 'var(--red)';
+    return `<div class="growth-compare-row">
+      <div class="growth-animal-icon">${a.icon||'🐄'}</div>
+      <div class="growth-info">
+        <div class="growth-name">${a.name}</div>
+        <div class="growth-species">${a.species||'Cattle'}</div>
+      </div>
+      <div class="growth-bar-wrap">
+        <div class="growth-bar-bg"><div class="growth-bar-fg" style="width:${score}%;background:${col}"></div></div>
+      </div>
+      <div class="growth-pct" style="color:${col}">${score}</div>
+      <div class="growth-delta ${deltaDir}">${delta>0?'+':''}${delta}%</div>
+    </div>`;
+  }).join('');
+  // Rank
+  const sorted = [...allA].map((a,i)=>({...a,score:baseScores[i%baseScores.length]})).sort((a,b)=>b.score-a.score);
+  return `
+    <div class="section-hdr">
+      <div class="section-hdr-title">📈 Growth Comparison</div>
+      <div class="section-hdr-count">${currentMonth}</div>
+    </div>
+    <div class="growth-compare-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:600;color:var(--g1)">All Animals · Monthly Growth Score</div>
+        <div style="font-size:10px;color:var(--g3)">Score / 100</div>
+      </div>
+      ${rows}
+    </div>
+    <div class="growth-compare-card">
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:10px">🏆 Growth Ranking</div>
+      ${sorted.map((a,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;${i<sorted.length-1?'border-bottom:1px solid var(--border2)':''}">
+        <div style="width:22px;height:22px;border-radius:50%;background:${i===0?'var(--gold)':i===1?'var(--g2)':'var(--g4)'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:${i<=1?'#000':'var(--g1)'}">${i+1}</div>
+        <span style="font-size:16px">${a.icon||'🐄'}</span>
+        <div style="flex:1;font-size:12px;font-weight:600;color:var(--white)">${a.name}</div>
+        <div style="font-size:13px;font-weight:700;color:${a.score>=85?'var(--neon)':a.score>=70?'var(--amb)':'var(--red)'}">${a.score}</div>
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+// ── FARM ROUTE SUGGESTIONS ─────────────────────────
+function renderFarmRoute() {
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : (isDemo ? [{name:'Bessie',icon:'🐄',species:'Cattle',status:'ok'},{name:'Nanny',icon:'🐐',species:'Goat',status:'warn'},{name:'Max',icon:'🐎',species:'Horse',status:'ok'}] : []);
+
+  // Real user with no animals yet
+  if (!isDemo && allA.length === 0) {
+    return `
+      <div class="location-banner">
+        <div class="location-banner-icon">📍</div>
+        <div class="location-banner-text">Port Harcourt, Nigeria · Route tailored to your farm<br>Add animals to get a personalised daily route</div>
+      </div>
+      <div class="log-empty" style="padding:60px 20px"><div class="log-empty-icon">🗺️</div>No animals in herd yet.<br>Add animals in the Herd tab to generate your daily farm route.</div>`;
+  }
+
+  const critical = allA.filter(a=>a.status==='crit');  const warning = allA.filter(a=>a.status==='warn');
+  const healthy = allA.filter(a=>a.status==='ok');
+
+  // Build daily tasks
+  const tasks = [];
+  if (critical.length > 0) {
+    tasks.push({icon:'🚨',title:`Urgent: Check ${critical.map(a=>a.name).join(', ')}`,detail:'Critical vitals detected. Inspect body temperature, breathing, and movement. Call vet if temp > 40°C.',badge:'priority'});
+  }
+  if (warning.length > 0) {
+    tasks.push({icon:'⚠️',title:`Monitor: ${warning.map(a=>a.name).join(', ')}`,detail:'Warning signs present. Check isolation status, water access, shade availability, and review feed intake.',badge:'priority'});
+  }
+  tasks.push({icon:'💧',title:'Morning Water Check — All Troughs',detail:'Inspect all water troughs for cleanliness and capacity. In Port Harcourt heat, cattle need 60–80L/day.',badge:'check'});
+  tasks.push({icon:'🌾',title:'Morning Feed Distribution',detail:'Distribute feed in shaded areas. Target cooler zones 6–9 AM before ambient temperature peaks.',badge:'feed'});
+  tasks.push({icon:'🏠',title:'Shelter & Shade Inspection',detail:'Confirm all animals have access to shade or covered pens. Tropical sun causes acute heat stress above 32°C.',badge:'check'});
+  tasks.push({icon:'❤️',title:`Vitals Check — ${healthy.length>0?healthy.map(a=>a.name).join(', '):'All Healthy Animals'}`,detail:'Take manual temperature and observe feeding behavior, gait, and coat condition.',badge:'check'});
+  tasks.push({icon:'💉',title:'Check Vaccination Due List',detail:'Review Care → Vaccines tab for any overdue or upcoming vaccinations. Prep syringes if needed.',badge:'priority'});
+  tasks.push({icon:'🌿',title:'Evening Grazing Rotation',detail:'Rotate pasture areas — alternate between plots to allow grass recovery. Avoid waterlogged paddocks after rain.',badge:'feed'});
+  tasks.push({icon:'📋',title:'Evening Health Log Entry',detail:'Log any treatments given today in Care → Treatment. Record feed intake and observations.',badge:'check'});
+
+  const routeState = getRouteState();
+  const completed = routeState.completed || [];
+  const doneCount = completed.length;
+  const totalCount = tasks.length;
+  const pct = Math.round((doneCount / totalCount) * 100);
+  const today = new Date().toLocaleDateString('en-NG',{weekday:'long',month:'long',day:'numeric'});
+
+  const taskRows = tasks.map((s,i) => {
+    const isDone = completed.includes(i);
+    return `<div class="route-task ${isDone?'done':''}" id="route-task-${i}">
+      <div class="route-task-left">
+        <div class="route-task-title">
+          ${s.icon} ${s.title}
+          <span class="route-task-badge ${s.badge}">${s.badge==='priority'?'URGENT':s.badge==='feed'?'FEED':'CHECK'}</span>
+        </div>
+        <div class="route-task-detail">${s.detail}</div>
+      </div>
+      <button class="route-done-btn ${isDone?'completed':''}" onclick="markRouteDone(${i})">
+        ${isDone?'✓ Done':'Done'}
+      </button>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="location-banner">
+      <div class="location-banner-icon">📍</div>
+      <div class="location-banner-text">Port Harcourt, Nigeria · ${today}<br>Resets automatically every new day</div>
+    </div>
+    <div class="section-hdr">
+      <div class="section-hdr-title">🗺️ Today's Farm Route</div>
+      <div class="section-hdr-count">${doneCount}/${totalCount} done</div>
+    </div>
+    <!-- PROGRESS -->
+    <div style="background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--g2);margin-bottom:8px">
+        <span style="font-weight:600">Today's Progress</span>
+        <span style="color:${pct===100?'var(--neon)':pct>=50?'var(--amb)':'var(--g2)'};font-weight:700">${pct}%</span>
+      </div>
+      <div class="route-progress-bar">
+        <div class="route-progress-fill" id="route-prog-fill" style="width:${pct}%"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <div style="flex:1;background:${critical.length>0?'var(--red-dim)':warning.length>0?'var(--amb-dim)':'var(--neon-dim)'};border-radius:10px;padding:10px;text-align:center;border:1px solid ${critical.length>0?'rgba(255,68,68,0.3)':warning.length>0?'rgba(200,134,10,0.3)':'rgba(92,184,92,0.3)'}">
+          <div style="font-size:18px;font-weight:700;color:${critical.length>0?'var(--red)':warning.length>0?'var(--amb)':'var(--neon)'}">${critical.length+warning.length||'0'}</div>
+          <div style="font-size:9px;color:var(--g2);font-weight:600;text-transform:uppercase;margin-top:2px">Needs Attention</div>
+        </div>
+        <div style="flex:1;background:var(--neon-dim);border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(92,184,92,0.3)">
+          <div style="font-size:18px;font-weight:700;color:var(--neon)">${doneCount}</div>
+          <div style="font-size:9px;color:var(--g2);font-weight:600;text-transform:uppercase;margin-top:2px">Tasks Done</div>
+        </div>
+        <div style="flex:1;background:var(--card2);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--border)">
+          <div style="font-size:18px;font-weight:700;color:var(--white)">${totalCount-doneCount}</div>
+          <div style="font-size:9px;color:var(--g2);font-weight:600;text-transform:uppercase;margin-top:2px">Remaining</div>
+        </div>
+      </div>
+    </div>
+    <!-- TASK LIST -->
+    <div class="route-card">
+      <div class="route-steps">${taskRows}</div>
+    </div>
+    <div style="background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);margin-bottom:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--white);margin-bottom:8px">🌦️ Climate Advisory Today</div>
+      <div class="heat-tips">
+        <div class="heat-tip">☀️ <span>Peak heat expected 11 AM–3 PM. Keep animals in shade or barn.</span></div>
+        <div class="heat-tip">🌧️ <span>Rainy season increases risk of mud-related foot rot — inspect hooves weekly.</span></div>
+        <div class="heat-tip">🦟 <span>High mosquito/tsetse activity at dusk — apply permethrin pour-on if available.</span></div>
+        <div class="heat-tip">📡 <span>Ensure ear tag sensors are clean — humidity and mud can affect readings.</span></div>
+      </div>
+    </div>
+  `;
+}
+
+window.markRouteDone = function(taskIdx) {
+  const state = getRouteState();
+  if(!state.completed.includes(taskIdx)){
+    state.completed.push(taskIdx);
+    saveRouteState(state);
+  }
+  // Update progress bar and task without full re-render
+  const btn = document.querySelector(`#route-task-${taskIdx} .route-done-btn`);
+  const task = document.getElementById(`route-task-${taskIdx}`);
+  const titleEl = task?.querySelector('.route-task-title');
+  const detailEl = task?.querySelector('.route-task-detail');
+  if(btn){btn.textContent='✓ Done';btn.classList.add('completed');}
+  if(task) task.classList.add('done');
+  if(titleEl) titleEl.style.textDecoration='line-through';
+  if(detailEl) detailEl.style.color='var(--g4)';
+  // Update progress
+  const animals = getAllAnimals();
+  const allA = animals.length > 0 ? animals : [{status:'ok'}];
+  const critical = allA.filter(a=>a.status==='crit');
+  const warning = allA.filter(a=>a.status==='warn');
+  const baseCount = 7 + (critical.length>0?1:0) + (warning.length>0?1:0);
+  const doneCount = state.completed.length;
+  const pct = Math.round((doneCount / baseCount) * 100);
+  const fill = document.getElementById('route-prog-fill');
+  if(fill) fill.style.width = Math.min(100,pct)+'%';
+  // Update counters
+  const sectionCount = document.querySelector('#nav-care.on')?.closest('.app')?.querySelector('.section-hdr-count');
+  t('✅ Task marked as done','ok');
+};
 function t(msg,type=''){
   const el=document.getElementById('toast');
   el.textContent=msg;el.className='toast'+(type?' '+type:'');
@@ -1634,13 +2693,14 @@ function fe(code){
     </div>
   </div>
   <div class="chat-suggestions" id="chat-sugs">
-    <div class="chat-sug" onclick="sendSug(this)">Normal cattle temp?</div>
-    <div class="chat-sug" onclick="sendSug(this)">Signs of fever in goats</div>
+    <div class="chat-sug" onclick="sendSug(this)">FMD vaccine schedule?</div>
+    <div class="chat-sug" onclick="sendSug(this)">Heat stress signs in cattle</div>
+    <div class="chat-sug" onclick="sendSug(this)">Best FCR for goats?</div>
+    <div class="chat-sug" onclick="sendSug(this)">Deworming frequency Nigeria</div>
     <div class="chat-sug" onclick="sendSug(this)">Low SpO₂ causes</div>
-    <div class="chat-sug" onclick="sendSug(this)">What does HR mean?</div>
   </div>
   <div class="chat-msgs" id="chat-msgs">
-    <div class="msg bot">👋 Hello! I'm your GLA Livestock Assistant. Ask me anything about livestock health, your animal vitals, or how to use this app. I only answer questions related to livestock and this platform.</div>
+    <div class="msg bot">👋 Hello! I'm your GLA Livestock Assistant. Ask me about vaccinations, heat stress, feed efficiency, treatment protocols, or any livestock health question for your farm in Port Harcourt, Nigeria. I only answer livestock-related questions.</div>
   </div>
   <div class="chat-input-row">
     <input class="chat-fi" id="chat-input" type="text" placeholder="Ask about your livestock..." autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()">
@@ -1756,6 +2816,13 @@ STRICT SCOPE RULE: You ONLY answer questions about:
 4. Livestock nutrition, feeding, breeding, and husbandry
 5. LIID app features (dashboard, analytics, herd management, ear tag setup, Firebase, ESP32-C3 device)
 6. Sensor data interpretation (what readings mean, when to be concerned)
+7. Vaccination schedules and reminders for West African livestock
+8. Treatment history and medication protocols
+9. Heat stress management — especially for tropical climates like Port Harcourt, Nigeria
+10. Weight gain trends and feed efficiency (FCR) analysis
+11. Growth comparison between animals
+12. Farm route planning and daily health check routines
+13. Location-specific advice for Port Harcourt, Nigeria (hot/humid tropical climate, rainy/dry season management, endemic diseases like FMD, CBPP, Lumpy Skin, Brucellosis, Trypanosomiasis)
 
 If asked anything outside this scope, politely decline and redirect to livestock/app topics.
 
@@ -1765,6 +2832,9 @@ Normal vital ranges by species:
 - Sheep: Temp 38.5–40.0°C, HR 70–80 bpm, SpO₂ ≥95%
 - Horse: Temp 37.5–38.5°C, HR 28–44 bpm, SpO₂ ≥95%
 - Pig: Temp 38.0–39.5°C, HR 60–80 bpm, SpO₂ ≥94%
+
+Heat Stress Index (THI) thresholds: Normal <72, Mild 72–78, Moderate 79–83, Severe >84.
+In Port Harcourt the ambient temp is often 30–36°C with 70–90% humidity — THI frequently exceeds 79 (moderate-severe stress zone).
 
 Keep answers concise and practical for farmers. Use simple language.`,
         messages: chatHistory
