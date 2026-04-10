@@ -7,36 +7,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#0c1008">
 <title>LIID</title>
-<link rel="apple-touch-icon" id="pwa-apple-icon" href="">
-<link rel="manifest" id="pwa-manifest" href="">
-<script>
-// Generate green LIID icon as base64 SVG and inject PWA manifest dynamically
-(function(){
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <rect width="512" height="512" rx="110" fill="#0c1008"/>
-    <circle cx="256" cy="256" r="200" fill="#5cb85c" opacity="0.18"/>
-    <circle cx="256" cy="256" r="160" fill="none" stroke="#5cb85c" stroke-width="12"/>
-    <text x="256" y="306" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="800" font-size="148" fill="#5cb85c">L</text>
-  </svg>`;
-  const b64 = 'data:image/svg+xml;base64,' + btoa(svg);
-  document.getElementById('pwa-apple-icon').href = b64;
-  const manifest = {
-    name: 'LIID',
-    short_name: 'LIID',
-    description: 'GLA Livestock Health Monitor',
-    start_url: '.',
-    display: 'standalone',
-    background_color: '#0c1008',
-    theme_color: '#5cb85c',
-    icons: [
-      { src: b64, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' },
-      { src: b64, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' }
-    ]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-})();
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -431,24 +401,6 @@ body.light .topbar-title{color:#6b6b6b}
 .care-tabs::-webkit-scrollbar{display:none}
 .care-tab{padding:7px 13px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--card);color:var(--g2);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all 0.2s;letter-spacing:0.3px}
 .care-tab.act{background:var(--neon-dim);border-color:var(--neon);color:var(--neon)}
-
-/* Vet Near Me button */
-.vet-btn{width:100%;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(92,184,92,0.18) 0%,rgba(92,184,92,0.08) 100%);border:1.5px solid var(--neon);color:var(--neon);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;transition:all 0.2s;-webkit-tap-highlight-color:transparent;letter-spacing:0.3px}
-.vet-btn:active{transform:scale(0.97);background:var(--neon-dim)}
-.vet-btn-icon{font-size:20px}
-.vet-btn-text{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
-.vet-btn-label{font-size:13px;font-weight:700}
-.vet-btn-sub{font-size:10px;font-weight:400;color:var(--g2);letter-spacing:0}
-.vet-locating{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g2);padding:0 2px 12px}
-
-/* Treat Now urgent banner */
-.treat-now-banner{background:linear-gradient(135deg,rgba(255,68,68,0.18) 0%,rgba(255,68,68,0.08) 100%);border:1.5px solid var(--red);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;animation:treatPulse 1.8s ease-in-out infinite}
-@keyframes treatPulse{0%,100%{border-color:var(--red);box-shadow:0 0 0 0 rgba(255,68,68,0.3)}50%{border-color:rgba(255,68,68,0.6);box-shadow:0 0 0 4px rgba(255,68,68,0)}}
-.treat-now-icon{font-size:22px;flex-shrink:0;margin-top:1px}
-.treat-now-body{flex:1}
-.treat-now-title{font-size:12px;font-weight:800;color:var(--red);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px}
-.treat-now-msg{font-size:11px;color:var(--g1);line-height:1.5}
-.treat-now-badge{display:inline-block;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:1px;margin-top:5px}
 
 /* Vaccination cards */
 .vacc-card{background:var(--card);border-radius:12px;padding:13px 14px;border:1px solid var(--border);margin-bottom:8px;display:flex;align-items:center;gap:12px}
@@ -1816,36 +1768,6 @@ window.switchCareTab = function(tab) {
   renderCareContent();
 };
 
-// ── FIND VET NEAR ME ─────────────────────────────
-window.findVetNearMe = function() {
-  const statusEl = document.getElementById('vet-status');
-  if (!statusEl) return;
-  statusEl.style.display = 'flex';
-  statusEl.innerHTML = '<span style="animation:sp 0.7s linear infinite;display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid rgba(92,184,92,0.3);border-top-color:var(--neon)"></span> Detecting your location...';
-  if (!navigator.geolocation) {
-    // fallback: open Google Maps search directly
-    statusEl.style.display = 'none';
-    window.open('https://www.google.com/maps/search/veterinary+clinic+near+me/', '_blank');
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    function(pos) {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      statusEl.style.display = 'none';
-      // Open Google Maps with vet search centered on user location
-      const url = `https://www.google.com/maps/search/veterinary+clinic/@${lat},${lng},14z`;
-      window.open(url, '_blank');
-    },
-    function(err) {
-      statusEl.style.display = 'none';
-      // Permission denied or error — open general Maps search
-      window.open('https://www.google.com/maps/search/veterinary+clinic+near+me/', '_blank');
-    },
-    { timeout: 8000, maximumAge: 300000 }
-  );
-};
-
 function renderCare() {
   const view = document.getElementById('view-care');
 
@@ -1866,17 +1788,6 @@ function renderCare() {
       <div class="care-tab" data-tab="route" onclick="switchCareTab('route')">🗺️ Farm Route</div>
     </div>
     <div id="care-content"></div>
-    <div style="padding:4px 0 0">
-      <button class="vet-btn" onclick="findVetNearMe()">
-        <span class="vet-btn-icon">🏥</span>
-        <span class="vet-btn-text">
-          <span class="vet-btn-label">Contact a Vet Near Me</span>
-          <span class="vet-btn-sub">Find the closest veterinary clinic to your farm</span>
-        </span>
-        <span style="margin-left:auto;font-size:14px;opacity:0.5">→</span>
-      </button>
-      <div id="vet-status" style="display:none" class="vet-locating"></div>
-    </div>
   `;
   careTab = 'vaccination';
   renderCareContent();
@@ -1897,14 +1808,6 @@ function renderCareContent() {
 // ── VACCINATION REMINDERS ──────────────────────────
 function getVaccinations(){return JSON.parse(localStorage.getItem('liid-vaccinations')||'[]');}
 function saveVaccinations(a){localStorage.setItem('liid-vaccinations',JSON.stringify(a));}
-
-// High-risk diseases requiring urgent treatment when overdue
-const HIGH_RISK_DISEASES = ['ppr','fmd','foot','mouth','cbpp','contagious bovine','lumpy skin','rift valley','brucellosis','anthrax','rabies','newcastle'];
-
-function isHighRisk(vaccineName) {
-  const lower = (vaccineName || '').toLowerCase();
-  return HIGH_RISK_DISEASES.some(d => lower.includes(d));
-}
 
 function renderVaccination() {
   const animals = getAllAnimals();
@@ -1939,25 +1842,15 @@ function renderVaccination() {
       const icon = overdue ? '⚠️' : soon ? '🔔' : '✅';
       const dateLabel = overdue ? `Overdue by ${Math.abs(v.dueIn)} days` : v.dueIn===0 ? 'Due today!' : `Due in ${v.dueIn} days`;
       const badge = overdue ? 'OVERDUE' : soon ? 'DUE SOON' : 'SCHEDULED';
-      const highRisk = isHighRisk(v.vaccine);
-      const treatNowBanner = (overdue && highRisk) ? `
-        <div class="treat-now-banner" style="margin-top:8px">
-          <span class="treat-now-icon">🚨</span>
-          <div class="treat-now-body">
-            <div class="treat-now-title">Treat Now — High-Risk Disease</div>
-            <div class="treat-now-msg"><strong>${v.vaccine}</strong> is a high-risk disease. This vaccine is <strong>${Math.abs(v.dueIn)} days overdue</strong> — your animals may be unprotected. Administer or consult your vet immediately.</div>
-            <span class="treat-now-badge">⚠️ URGENT ACTION REQUIRED</span>
-          </div>
-        </div>` : '';
-      return `<div class="vacc-card" style="${overdue && highRisk ? 'border-color:rgba(255,68,68,0.6);background:rgba(255,68,68,0.07)' : ''}">
+      return `<div class="vacc-card">
         <div class="vacc-icon ${cls}">${icon}</div>
         <div class="vacc-info">
-          <div class="vacc-name">${v.vaccine}${highRisk ? ' <span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;background:rgba(255,68,68,0.15);color:var(--red);margin-left:4px;letter-spacing:0.5px">HIGH RISK</span>' : ''}</div>
+          <div class="vacc-name">${v.vaccine}</div>
           <div class="vacc-animal">${a.name} · ${a.species} · Every ${v.interval}</div>
           <div class="vacc-date ${cls}">${dateLabel}</div>
         </div>
         <div class="vacc-badge ${cls}">${badge}</div>
-      </div>${treatNowBanner}`;
+      </div>`;
     }).join('');
     const overdue = vaccData.filter(v=>v.dueIn<0).length;
     const soon2 = vaccData.filter(v=>v.dueIn>=0&&v.dueIn<=21).length;
@@ -1992,20 +1885,10 @@ function renderVaccination() {
     const icon = isOverdue ? '⚠️' : isSoon ? '🔔' : '✅';
     const dateLabel = isOverdue ? `Overdue by ${Math.abs(diffDays)} days` : diffDays===0 ? 'Due today!' : `Due in ${diffDays} days`;
     const badge = isOverdue ? 'OVERDUE' : isSoon ? 'DUE SOON' : 'SCHEDULED';
-    const highRisk = isHighRisk(r.vaccine);
-    const treatNowBanner = (isOverdue && highRisk) ? `
-      <div class="treat-now-banner" style="margin-top:8px">
-        <span class="treat-now-icon">🚨</span>
-        <div class="treat-now-body">
-          <div class="treat-now-title">Treat Now — High-Risk Disease</div>
-          <div class="treat-now-msg"><strong>${r.vaccine}</strong> is a high-risk disease. Overdue by <strong>${Math.abs(diffDays)} days</strong> — your animals may be unprotected. Administer or consult your vet immediately.</div>
-          <span class="treat-now-badge">⚠️ URGENT ACTION REQUIRED</span>
-        </div>
-      </div>` : '';
-    return `<div class="vacc-card" style="${isOverdue && highRisk ? 'border-color:rgba(255,68,68,0.6);background:rgba(255,68,68,0.07)' : ''}">
+    return `<div class="vacc-card">
       <div class="vacc-icon ${cls}">${icon}</div>
       <div class="vacc-info">
-        <div class="vacc-name">${r.vaccine}${highRisk ? ' <span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;background:rgba(255,68,68,0.15);color:var(--red);margin-left:4px;letter-spacing:0.5px">HIGH RISK</span>' : ''}</div>
+        <div class="vacc-name">${r.vaccine}</div>
         <div class="vacc-animal">${animal.icon||'🐄'} ${animal.name} · ${r.interval||'Annual'}</div>
         <div class="vacc-date ${cls}">${dateLabel} · ${r.nextDue}</div>
       </div>
@@ -2013,24 +1896,10 @@ function renderVaccination() {
         <div class="vacc-badge ${cls}">${badge}</div>
         <button class="log-delete-btn" onclick="deleteVaccination(${i})" style="width:22px;height:22px;font-size:10px">✕</button>
       </div>
-    </div>${treatNowBanner}`;
+    </div>`;
   }).join('');
 
-  const criticalOverdue = records.filter(r => {
-    const d = new Date(r.nextDue); d.setHours(0,0,0,0);
-    return d < today && isHighRisk(r.vaccine);
-  });
-  const criticalBanner = criticalOverdue.length > 0 ? `
-    <div style="background:linear-gradient(135deg,rgba(255,68,68,0.2) 0%,rgba(255,68,68,0.08) 100%);border:1.5px solid var(--red);border-radius:12px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
-      <span style="font-size:22px">🚨</span>
-      <div>
-        <div style="font-size:12px;font-weight:800;color:var(--red);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:3px">\${criticalOverdue.length} High-Risk Disease\${criticalOverdue.length>1?'s':''} Overdue</div>
-        <div style="font-size:11px;color:var(--g1);line-height:1.5">\${criticalOverdue.map(r=>r.vaccine).join(', ')} — treat your animals now or contact a vet immediately.</div>
-      </div>
-    </div>` : '';
-
   return `
-    \${criticalBanner}
     <div class="section-hdr">
       <div class="section-hdr-title">💉 Vaccination Schedule</div>
       ${overdue>0?`<div class="section-hdr-count" style="background:var(--red-dim);color:var(--red)">${overdue} OVERDUE</div>`:records.length>0?`<div class="section-hdr-count">${soon} soon</div>`:''}
