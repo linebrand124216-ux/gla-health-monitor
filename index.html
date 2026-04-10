@@ -552,6 +552,46 @@ body.light .topbar-title{color:#6b6b6b}
 .route-task-badge.check{background:var(--neon-dim);color:var(--neon)}
 .route-task-badge.feed{background:var(--amb-dim);color:var(--amb)}
 
+/* ── VET NEAR ME BUTTON ── */
+.vet-btn{width:100%;padding:13px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(106,184,212,0.18),rgba(92,184,92,0.12));border:1.5px solid var(--blue);color:var(--blue);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:12px;-webkit-tap-highlight-color:transparent;transition:all 0.2s;letter-spacing:0.3px}
+.vet-btn:active{opacity:0.75;transform:scale(0.98)}
+.vet-btn-pulse{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;animation:bl 1.6s ease-in-out infinite;box-shadow:0 0 6px var(--blue)}
+
+/* ── VET MODAL ── */
+#vet-modal{position:fixed;inset:0;z-index:800;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#vet-modal.open{display:flex}
+.vet-modal-sheet{background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border);border-bottom:none;width:100%;max-width:430px;padding:20px 18px 36px;animation:slideUp 0.35s cubic-bezier(0.32,0.72,0,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.vet-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.vet-modal-title{font-size:16px;font-weight:700;color:var(--white)}
+.vet-modal-close{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--g2)}
+.vet-result-card{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+.vet-result-icon{width:44px;height:44px;border-radius:12px;background:rgba(106,184,212,0.15);border:1px solid rgba(106,184,212,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.vet-result-info{flex:1}
+.vet-result-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px}
+.vet-result-addr{font-size:11px;color:var(--g2);margin-bottom:5px;line-height:1.5}
+.vet-result-dist{font-size:10px;font-weight:700;color:var(--blue)}
+.vet-call-btn{padding:7px 14px;border-radius:20px;background:var(--blue);color:#0c1008;border:none;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;align-self:center}
+.vet-call-btn:active{opacity:0.8}
+.vet-loading{text-align:center;padding:28px;color:var(--g2);font-size:13px}
+.vet-loading-spin{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--blue);animation:sp 0.8s linear infinite;display:inline-block;margin-bottom:10px}
+.vet-empty{text-align:center;padding:28px 16px;color:var(--g2);font-size:12px;line-height:1.7}
+.vet-map-btn{width:100%;padding:12px;border-radius:12px;background:var(--neon-dim);border:1px solid rgba(92,184,92,0.3);color:var(--neon);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;margin-top:4px}
+.vet-map-btn:active{opacity:0.8}
+
+/* ── TREAT NOW ALERT ── */
+.treat-now-banner{border-radius:14px;padding:14px 15px;margin-bottom:10px;border:2px solid rgba(255,68,68,0.6);background:rgba(255,68,68,0.08);animation:treatPulse 1.5s ease-in-out infinite}
+@keyframes treatPulse{0%,100%{border-color:rgba(255,68,68,0.6);box-shadow:none}50%{border-color:rgba(255,68,68,0.9);box-shadow:0 0 14px rgba(255,68,68,0.25)}}
+.treat-now-hdr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.treat-now-icon{font-size:24px;flex-shrink:0}
+.treat-now-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--red);background:var(--red-dim);padding:2px 8px;border-radius:20px;border:1px solid rgba(255,68,68,0.35)}
+.treat-now-title{font-size:13px;font-weight:700;color:var(--white)}
+.treat-now-sub{font-size:10px;color:var(--g2);margin-top:2px;line-height:1.5}
+.treat-now-actions{display:flex;gap:8px;margin-top:10px}
+.treat-now-act-btn{flex:1;padding:9px 10px;border-radius:10px;background:var(--red);color:#fff;border:none;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;text-align:center}
+.treat-now-act-btn:active{opacity:0.8}
+.treat-now-act-btn.outline{background:transparent;color:var(--blue);border:1px solid var(--blue)}
+
 /* Section header */
 .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-top:4px}
 .section-hdr-title{font-size:14px;font-weight:700;color:var(--white);display:flex;align-items:center;gap:7px}
@@ -591,6 +631,17 @@ body.light .topbar-title{color:#6b6b6b}
 </style>
 </head>
 <body>
+
+<!-- ══════════ VET NEAR ME MODAL ══════════ -->
+<div id="vet-modal" onclick="closeVetModal(event)">
+  <div class="vet-modal-sheet" id="vet-sheet">
+    <div class="vet-modal-hdr">
+      <div class="vet-modal-title">🏥 Vets Near You</div>
+      <button class="vet-modal-close" onclick="closeVetModalDirect()">✕</button>
+    </div>
+    <div id="vet-results"><div class="vet-loading"><div class="vet-loading-spin"></div><br>Finding your location…</div></div>
+  </div>
+</div>
 
 <div id="load">
   <div class="load-brand">
@@ -1787,6 +1838,10 @@ function renderCare() {
       <div class="care-tab" data-tab="growth" onclick="switchCareTab('growth')">📈 Growth</div>
       <div class="care-tab" data-tab="route" onclick="switchCareTab('route')">🗺️ Farm Route</div>
     </div>
+    <button class="vet-btn" onclick="openVetModal()">
+      <div class="vet-btn-pulse"></div>
+      📍 Contact a Vet Near Me
+    </button>
     <div id="care-content"></div>
   `;
   careTab = 'vaccination';
@@ -1859,6 +1914,7 @@ function renderVaccination() {
         <div class="section-hdr-title">💉 Vaccination Reminders</div>
         ${overdue>0?`<div class="section-hdr-count" style="background:var(--red-dim);color:var(--red)">${overdue} OVERDUE</div>`:`<div class="section-hdr-count">${soon2} soon</div>`}
       </div>
+      ${renderHighRiskAlerts(vaccData)}
       <div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb);line-height:1.6">
         🌍 <strong>Port Harcourt, NG:</strong> FMD, CBPP, Lumpy Skin and Brucellosis are endemic. Rainy season increases tick-borne disease risk. <em>(Demo data)</em>
       </div>
@@ -1904,6 +1960,7 @@ function renderVaccination() {
       <div class="section-hdr-title">💉 Vaccination Schedule</div>
       ${overdue>0?`<div class="section-hdr-count" style="background:var(--red-dim);color:var(--red)">${overdue} OVERDUE</div>`:records.length>0?`<div class="section-hdr-count">${soon} soon</div>`:''}
     </div>
+    ${renderHighRiskAlerts(records)}
     <div style="background:var(--amb-dim);border:1px solid rgba(200,134,10,0.3);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:11px;color:var(--amb);line-height:1.6">
       🌍 <strong>Port Harcourt, NG:</strong> Key vaccines — FMD, CBPP, Lumpy Skin, Brucellosis, Rabies, Tetanus. Log each animal's schedule below.
     </div>
@@ -2746,6 +2803,203 @@ function clearApiKey() {
   anthropicKey = '';
   localStorage.removeItem('liid-apikey');
   updateChatKeyUI();
+}
+
+// ── HIGH-RISK ILLNESS TREAT NOW ALERTS ────────────────
+const HIGH_RISK_DISEASES = {
+  'PPR': {
+    fullName: 'Peste des Petits Ruminants (PPR)',
+    icon: '🐐',
+    species: 'Goats & Sheep',
+    urgency: 'TREAT NOW',
+    desc: 'Highly contagious viral disease. Causes fever, nasal discharge, mouth sores, diarrhoea, and pneumonia. Can kill up to 90% of susceptible animals.',
+    action: 'Isolate affected animals immediately. Contact a vet for antiserum and supportive treatment. Vaccinate healthy animals.',
+    treatmentLine: 'No cure — supportive: antibiotics for secondary infections (Oxytetracycline), anti-diarrhoeals, electrolytes.'
+  },
+  'FMD': {
+    fullName: 'Foot & Mouth Disease (FMD)',
+    icon: '🐄',
+    species: 'Cattle, Goats, Sheep, Pigs',
+    urgency: 'TREAT NOW',
+    desc: 'Highly infectious. Blisters on mouth, feet, and teats. Animals drool heavily, refuse to walk. Endemic in Port Harcourt region.',
+    action: 'Quarantine herd immediately. Report to NAFDAC/state vet. Treat blisters with antiseptic, pain relief.',
+    treatmentLine: 'Antiseptic wash (1% potassium permanganate) on lesions. Antipyretics (Flunixin), oral antibiotics to prevent secondary infection.'
+  },
+  'CBPP': {
+    fullName: 'Contagious Bovine Pleuropneumonia (CBPP)',
+    icon: '🐄',
+    species: 'Cattle',
+    urgency: 'TREAT NOW',
+    desc: 'Severe lung infection in cattle. Causes coughing, laboured breathing, fever, and weight loss. Spreads rapidly between herds.',
+    action: 'Isolate affected cattle. Vet must confirm diagnosis. Treat early with prescribed antibiotics.',
+    treatmentLine: 'Oxytetracycline (LA) or Tylosin under vet supervision. Vaccinate herd within 30 days of outbreak.'
+  },
+  'LUMPY SKIN': {
+    fullName: 'Lumpy Skin Disease (LSD)',
+    icon: '🐄',
+    species: 'Cattle',
+    urgency: 'URGENT',
+    desc: 'Viral disease causing skin nodules all over the body, fever, swollen lymph nodes. Spread by insects — peaks in rainy season.',
+    action: 'Isolate affected animals. Apply wound care to skin nodules. Treat secondary infections.',
+    treatmentLine: 'No direct antiviral. Anti-inflammatories (Flunixin), antibiotics for secondary skin infections, fly/insect repellent.'
+  },
+  'BRUCELLOSIS': {
+    fullName: 'Brucellosis',
+    icon: '🐄',
+    species: 'Cattle, Goats, Sheep',
+    urgency: 'URGENT',
+    desc: 'Causes late-term abortions, stillbirths, and reduced fertility. Can spread to humans through raw milk — serious zoonotic risk.',
+    action: 'Isolate aborting animals. Do NOT handle aborted material without gloves. Confirm with blood test.',
+    treatmentLine: 'No cure once infected — affected animals may need culling. Vaccinate young females (RB51 or S19). Vet consult essential.'
+  }
+};
+
+function renderHighRiskAlerts(records) {
+  if (!records || records.length === 0) return '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  let banners = '';
+  records.forEach(r => {
+    const vaccineName = (r.vaccine || '').toUpperCase();
+    let matchedKey = null;
+    for (const key of Object.keys(HIGH_RISK_DISEASES)) {
+      if (vaccineName.includes(key)) { matchedKey = key; break; }
+    }
+    if (!matchedKey) return;
+    const dueDate = new Date(r.nextDue || r.dueIn !== undefined ? (r.nextDue || new Date(Date.now() + r.dueIn * 86400000).toISOString().split('T')[0]) : '');
+    dueDate.setHours(0,0,0,0);
+    const diffDays = r.dueIn !== undefined ? r.dueIn : Math.round((dueDate - today) / 86400000);
+    // Show TREAT NOW banner only if overdue (negative days) or due within 7 days
+    if (diffDays > 7) return;
+    const d = HIGH_RISK_DISEASES[matchedKey];
+    const isOverdue = diffDays < 0;
+    const urgencyClass = d.urgency === 'TREAT NOW' ? '' : 'style="border-color:rgba(200,134,10,0.6);background:rgba(200,134,10,0.08);animation:none;border-width:1.5px"';
+    const urgencyLabelStyle = d.urgency === 'TREAT NOW' ? '' : 'style="background:var(--amb-dim);color:var(--amb);border-color:rgba(200,134,10,0.4)"';
+    banners += `<div class="treat-now-banner" ${urgencyClass}>
+      <div class="treat-now-hdr">
+        <div class="treat-now-icon">${d.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <span class="treat-now-label" ${urgencyLabelStyle}>⚠️ ${d.urgency}</span>
+            <span style="font-size:9px;color:var(--g3);font-weight:600">${isOverdue ? `OVERDUE ${Math.abs(diffDays)}d` : diffDays === 0 ? 'DUE TODAY' : `DUE IN ${diffDays}d`}</span>
+          </div>
+          <div class="treat-now-title">${d.fullName}</div>
+          <div class="treat-now-sub">${d.species}</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--g2);line-height:1.6;margin-bottom:6px">${d.desc}</div>
+      <div style="font-size:11px;color:var(--amb);background:var(--amb-dim);border-radius:8px;padding:8px 10px;margin-bottom:8px;border:1px solid rgba(200,134,10,0.2)">
+        💊 <strong>Treatment:</strong> ${d.treatmentLine}
+      </div>
+      <div style="font-size:11px;color:var(--red);font-weight:600;margin-bottom:8px">🚨 Action: ${d.action}</div>
+      <div class="treat-now-actions">
+        <button class="treat-now-act-btn" onclick="openVetModal()">📍 Find Vet Now</button>
+        <button class="treat-now-act-btn outline" onclick="this.closest('.treat-now-banner').style.display='none'">Dismiss</button>
+      </div>
+    </div>`;
+  });
+  return banners;
+}
+
+// ── VET NEAR ME ────────────────────────────────────────
+window.openVetModal = function() {
+  document.getElementById('vet-modal').classList.add('open');
+  document.getElementById('vet-results').innerHTML = `<div class="vet-loading"><div class="vet-loading-spin"></div><br>Detecting your location…</div>`;
+  if (!navigator.geolocation) {
+    showVetFallback();
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => fetchVetsNearby(pos.coords.latitude, pos.coords.longitude),
+    err => showVetFallback(),
+    { timeout: 8000, maximumAge: 60000 }
+  );
+};
+
+window.closeVetModal = function(e) {
+  if (e.target === document.getElementById('vet-modal')) {
+    document.getElementById('vet-modal').classList.remove('open');
+  }
+};
+window.closeVetModalDirect = function() {
+  document.getElementById('vet-modal').classList.remove('open');
+};
+
+function fetchVetsNearby(lat, lng) {
+  document.getElementById('vet-results').innerHTML = `<div class="vet-loading"><div class="vet-loading-spin"></div><br>Searching for vets nearby…</div>`;
+  // Use Google Maps Places API via a proxied search URL — open Google Maps search directly
+  // We'll use the Nominatim / Overpass API (free, no key needed) to find vets
+  const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:15];(node["amenity"="veterinary"](around:15000,${lat},${lng});way["amenity"="veterinary"](around:15000,${lat},${lng}););out center 10;`;
+
+  fetch(overpassUrl)
+    .then(r => r.json())
+    .then(data => {
+      const elements = data.elements || [];
+      if (elements.length === 0) {
+        showVetFallback(lat, lng);
+        return;
+      }
+      // Calculate distance
+      function dist(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2-lat1)*Math.PI/180;
+        const dLon = (lon2-lon1)*Math.PI/180;
+        const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+      }
+      const vets = elements.map(el => {
+        const elLat = el.lat || el.center?.lat;
+        const elLon = el.lon || el.center?.lon;
+        const d = dist(lat, lng, elLat, elLon);
+        return {
+          name: el.tags?.name || 'Veterinary Clinic',
+          addr: el.tags?.['addr:full'] || el.tags?.['addr:street'] || el.tags?.['addr:city'] || 'Nearby',
+          phone: el.tags?.phone || el.tags?.['contact:phone'] || null,
+          dist: d,
+          lat: elLat,
+          lon: elLon
+        };
+      }).sort((a,b) => a.dist - b.dist).slice(0, 6);
+
+      const cards = vets.map(v => {
+        const distStr = v.dist < 1 ? Math.round(v.dist * 1000) + ' m away' : v.dist.toFixed(1) + ' km away';
+        const mapsUrl = `https://www.google.com/maps/search/veterinary+clinic/@${v.lat},${v.lon},15z`;
+        return `<div class="vet-result-card">
+          <div class="vet-result-icon">🏥</div>
+          <div class="vet-result-info">
+            <div class="vet-result-name">${v.name}</div>
+            <div class="vet-result-addr">${v.addr}</div>
+            <div class="vet-result-dist">📍 ${distStr}</div>
+          </div>
+          ${v.phone
+            ? `<a href="tel:${v.phone}" class="vet-call-btn">📞 Call</a>`
+            : `<a href="${mapsUrl}" target="_blank" class="vet-call-btn">🗺️ Map</a>`}
+        </div>`;
+      }).join('');
+
+      const mapsSearchUrl = `https://www.google.com/maps/search/veterinary+clinic/@${lat},${lng},13z`;
+      document.getElementById('vet-results').innerHTML = `
+        <div style="font-size:11px;color:var(--g2);margin-bottom:12px">Found ${vets.length} vet clinic${vets.length!==1?'s':''} near you</div>
+        ${cards}
+        <button class="vet-map-btn" onclick="window.open('${mapsSearchUrl}','_blank')">🗺️ View All on Google Maps</button>
+      `;
+    })
+    .catch(() => showVetFallback(lat, lng));
+}
+
+function showVetFallback(lat, lng) {
+  const searchQ = encodeURIComponent('veterinary clinic livestock vet near me');
+  const mapsUrl = lat && lng
+    ? `https://www.google.com/maps/search/veterinary+clinic/@${lat},${lng},13z`
+    : `https://www.google.com/maps/search/veterinary+clinic+Port+Harcourt+Nigeria`;
+  document.getElementById('vet-results').innerHTML = `
+    <div class="vet-empty">
+      <div style="font-size:36px;opacity:0.4;margin-bottom:10px">🏥</div>
+      <div style="font-weight:700;color:var(--white);margin-bottom:6px">Search on Google Maps</div>
+      <div style="margin-bottom:16px">Tap the button below to find the closest vet clinics on Google Maps.</div>
+      <button class="vet-map-btn" onclick="window.open('${mapsUrl}','_blank')">🗺️ Open Google Maps — Vets Near Me</button>
+      <div style="margin-top:12px;font-size:11px;color:var(--g3)">Tip: Allow location access for better results</div>
+    </div>
+  `;
 }
 
 function toggleTheme() {
