@@ -1462,11 +1462,12 @@ function renderHerd() {
           </div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">TAG CODE (auto-generated, unique)</div>
+          <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">TAG CODE (your Device ID)</div>
           <div style="display:flex;gap:7px">
             <input class="dev-fi" id="new-animal-tag" type="text" placeholder="GLA-XXXX-XXXX" style="flex:1;text-transform:uppercase" readonly>
             <button class="gen-btn" onclick="genAnimalTag()">GEN</button>
           </div>
+          <div style="font-size:10px;color:var(--g3);margin-top:4px">Matches your saved Device ID so the ESP32 data links correctly.</div>
         </div>
 
         <button class="link-btn" onclick="addAnimal()" ${animals.length>=100?'disabled style="opacity:0.4"':''}>
@@ -1511,6 +1512,14 @@ window.toggleAddAnimal=function(){
 };
 
 window.genAnimalTag=function(){
+  // Always use the saved Device ID as the tag code so the ESP32 data matches
+  const savedDevId = userProfile?.deviceId || '';
+  const el = document.getElementById('new-animal-tag');
+  if (savedDevId && savedDevId.length > 6) {
+    if (el) el.value = savedDevId;
+    return;
+  }
+  // No device ID saved yet — generate a random tag
   const allAnimals=getAllAnimals();
   const usedTags=new Set(allAnimals.map(a=>a.tag));
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -1523,7 +1532,6 @@ window.genAnimalTag=function(){
     for(let i=0;i<4;i++)tag+=c[Math.floor(Math.random()*c.length)];
     attempts++;
   } while(usedTags.has(tag)&&attempts<1000);
-  const el=document.getElementById('new-animal-tag');
   if(el)el.value=tag;
 };
 
@@ -1547,9 +1555,12 @@ window.saveFarmDevId = async function() {
     }
     userProfile = {...userProfile, deviceId: id};
     hasDevice = true;
-    t('✅ Device ID saved: ' + id, 'ok');
+    t('✅ Device ID saved: ' + id + ' — Now add an animal and the Tag Code will match!', 'ok');
     renderHerd();
     renderDashboard();
+    // Auto-fill tag code if add animal form is open
+    const tagEl = document.getElementById('new-animal-tag');
+    if (tagEl) tagEl.value = id;
   } catch(e) { t('Error saving Device ID', 'err'); }
 };
 
@@ -1566,7 +1577,9 @@ window.addAnimal=async function(){
 
   const all=getAllAnimals();
   if(all.length>=100){if(errEl)errEl.textContent='Maximum 100 animals reached';return;}
-  if(all.some(a=>a.tag===tag)){
+  // Only block duplicate tags if NOT using the shared Device ID
+  const savedDevId = userProfile?.deviceId || '';
+  if(all.some(a=>a.tag===tag) && tag !== savedDevId){
     if(errEl)errEl.textContent='Tag already in use — generate a new one';
     genAnimalTag();
     return;
