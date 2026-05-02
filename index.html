@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="theme-color" content="#0c1008">
+<meta name="theme-color" content="#0a0604">
 <title>LIID</title>
 <link rel="apple-touch-icon" id="pwa-apple-icon" href="">
 <link rel="manifest" id="pwa-manifest" href="">
@@ -636,6 +636,145 @@ body.light .topbar-title{color:#6b6b6b}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:var(--neon);color:var(--neon)}
 .toast.err{border-color:var(--red);color:var(--red)}
+
+/* ════════════════════════════════════════════════════════════════════
+   APLIX RE-SKIN v12 — palette swap + corner-bracket detail only
+   Two changes:
+     1. Recolor the existing palette to Aplix orange/black
+     2. Add Aplix's signature dashed orange corner brackets at the top
+        corners of: topbar, bottom nav, auth card, banners, primary CTAs
+   No glass, no blur, no card surface changes beyond palette.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. APLIX PALETTE — remap existing variables ── */
+:root{
+  --bg:#0a0604;
+  --bg2:#13090a;
+  --bg3:#1a0c0a;
+  --card:#15100e;
+  --card2:#1c1612;
+  --border:#2a1f1a;
+  --border2:#382820;
+  --neon:#ff6b1a;
+  --neon2:#ff8a3d;
+  --neon-dim:rgba(255,107,26,0.14);
+  --neon-glow:0 0 14px rgba(255,107,26,0.35);
+  --amb:#ffa558;
+  --amb-dim:rgba(255,165,88,0.16);
+  --gold:#ffb866;
+  --gold-dim:rgba(255,184,102,0.14);
+}
+body.light{
+  --bg:#fff8f3;
+  --bg2:#fdeee2;
+  --bg3:#fbe4d3;
+  --card:#ffffff;
+  --card2:#fff7f0;
+  --border:#f0d8c0;
+  --border2:#e8c8a8;
+  --neon:#e85a0c;
+  --neon2:#ff7a2e;
+  --neon-dim:rgba(232,90,12,0.10);
+  --neon-glow:0 0 10px rgba(232,90,12,0.25);
+  --amb:#c8520a;
+  --amb-dim:rgba(200,82,10,0.14);
+  --gold:#a86e08;
+  --gold-dim:rgba(168,110,8,0.14);
+}
+
+/* Aplix backdrop: warm-black + burnt-orange radial halo at the top */
+body{
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,107,26,0.22) 0%, rgba(255,107,26,0.06) 40%, transparent 75%),
+    var(--bg) !important;
+}
+body.light{
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,140,60,0.18) 0%, transparent 70%),
+    var(--bg) !important;
+}
+
+/* ── 2. APLIX CORNER BRACKETS ──
+   Dashed orange brackets at the TOP-LEFT and TOP-RIGHT of every framed
+   element, drawn via ::before / ::after pseudo-elements. Implementation
+   note: we only attach to elements whose original CSS does NOT use
+   ::before/::after, so we don't break existing rules. */
+
+.topbar,
+.bnav,
+.auth-body,
+.health-banner,
+.treat-now-banner,
+.location-banner,
+.add-animal-card,
+.auth-btn,
+.demo-btn{
+  position: relative;
+}
+
+.topbar::before,
+.bnav::before,
+.auth-body::before,
+.health-banner::before,
+.treat-now-banner::before,
+.location-banner::before,
+.add-animal-card::before,
+.auth-btn::before,
+.demo-btn::before{
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 14px;
+  height: 14px;
+  border-top: 1.5px dashed #ff6b1a;
+  border-left: 1.5px dashed #ff6b1a;
+  border-top-left-radius: 4px;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 2;
+}
+
+.topbar::after,
+.bnav::after,
+.auth-body::after,
+.health-banner::after,
+.treat-now-banner::after,
+.location-banner::after,
+.add-animal-card::after,
+.auth-btn::after,
+.demo-btn::after{
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-top: 1.5px dashed #ff6b1a;
+  border-right: 1.5px dashed #ff6b1a;
+  border-top-right-radius: 4px;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 2;
+}
+
+/* ── 3. PRIMARY CTA polish — solid orange + soft Aplix-style shadow ── */
+.auth-btn,
+.demo-btn{
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  box-shadow: 0 4px 14px rgba(255,107,26,0.28) !important;
+}
+.auth-btn:hover,
+.demo-btn:hover{
+  background: var(--neon2) !important;
+  box-shadow: 0 6px 18px rgba(255,107,26,0.40) !important;
+}
+
+/* Active bottom-nav item — orange glow on icon */
+.nav-item.on .nav-icon svg{ filter: drop-shadow(0 0 4px rgba(255,107,26,0.45)); }
+
 </style>
 </head>
 <body>
@@ -757,7 +896,7 @@ body.light .topbar-title{color:#6b6b6b}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, getDoc as _getDoc, collection, onSnapshot, serverTimestamp, deleteField, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, getDoc as _getDoc, collection, onSnapshot, serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCo-69r1IQsdTC4DP8xQTB7UeJiejtLD-0",
@@ -813,7 +952,7 @@ async function loadProfile(uid) {
     const snap = await getDoc(doc(db,'farms',uid));
     if (snap.exists()) {
       userProfile = snap.data();
-      hasDevice = true; // Device IDs are now per-animal in the herd
+      hasDevice = !!(userProfile.deviceId && userProfile.deviceId !== '');
     }
   } catch(e) {}
 }
@@ -1418,21 +1557,6 @@ function renderHerd() {
       <div class="hstat"><div class="hstat-val total">${animals.length}/100</div><div class="hstat-lbl">Total</div></div>
     </div>
 
-    <!-- DEVICE ID SECTION -->
-    <div class="add-animal-card" style="margin-bottom:10px">
-      <div style="font-size:10px;color:var(--g2);font-weight:600;letter-spacing:0.5px;margin-bottom:8px">📡 ESP32 DEVICE ID</div>
-      <div style="display:flex;gap:7px;align-items:center">
-        <input class="dev-fi" id="farm-devid-input" type="text"
-          placeholder="GLA-XXXX-XXXX"
-          value="${userProfile?.deviceId||''}"
-          style="flex:1;text-transform:uppercase">
-        <button class="gen-btn" onclick="genFarmDevId()">GEN</button>
-      </div>
-      <div style="font-size:10px;color:var(--g3);margin-top:6px">This is the Device ID your ESP32 ear tag uses to connect. Enter it here after setting up the device.</div>
-      <button class="link-btn" onclick="saveFarmDevId()" style="margin-top:10px;padding:10px">Save Device ID</button>
-      ${userProfile?.deviceId ? `<div style="font-size:11px;color:var(--neon);margin-top:6px;text-align:center">● Active: ${userProfile.deviceId}</div>` : ''}
-    </div>
-
     <!-- ADD ANIMAL SECTION -->
     <div class="add-animal-card" id="add-animal-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${addAnimalOpen?'14':'0'}px" onclick="toggleAddAnimal()">
@@ -1462,14 +1586,12 @@ function renderHerd() {
           </div>
         </div>
         <div style="margin-bottom:10px">
-          <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">TAG CODE (your Device ID)</div>
+          <div style="font-size:10px;color:var(--g2);margin-bottom:5px;font-weight:600;letter-spacing:0.5px">TAG CODE (auto-generated, unique)</div>
           <div style="display:flex;gap:7px">
             <input class="dev-fi" id="new-animal-tag" type="text" placeholder="GLA-XXXX-XXXX" style="flex:1;text-transform:uppercase" readonly>
             <button class="gen-btn" onclick="genAnimalTag()">GEN</button>
           </div>
-          <div style="font-size:10px;color:var(--g3);margin-top:4px">Matches your saved Device ID so the ESP32 data links correctly.</div>
         </div>
-
         <button class="link-btn" onclick="addAnimal()" ${animals.length>=100?'disabled style="opacity:0.4"':''}>
           ${animals.length>=100?'Herd Full (100/100)':'Add to Herd'}
         </button>
@@ -1481,22 +1603,19 @@ function renderHerd() {
     <div class="animal-list">
       ${animals.length===0?`<div style="text-align:center;padding:40px;color:var(--g2);font-size:13px"><div style="font-size:40px;opacity:0.3;margin-bottom:12px">🐄</div>No animals yet. Add your first animal above.</div>`:
       animals.map(a=>`
-        <div class="animal-row" style="position:relative">
-          <div style="flex:1;display:flex;align-items:center;gap:12px" onclick="selectAnimalAndGo('${a.id}')">
-            <div class="ar-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></div>
-            <div class="ar-icon">${a.icon}</div>
-            <div class="ar-info">
-              <div class="ar-name">${a.name}</div>
-              <div class="ar-sub">${a.species} · ${a.tag}${a.deviceId?` · 📡 ${a.deviceId}`:''}</div>
-            </div>
-            <div class="ar-vitals">
-              <div class="ar-temp">${a.temp.toFixed(1)}°C</div>
-              <div class="ar-hr">${a.hr} bpm</div>
-              <div class="ar-spo2">${a.spo2.toFixed(1)}%</div>
-            </div>
-            <div class="ar-arrow">›</div>
+        <div class="animal-row" onclick="selectAnimalAndGo('${a.id}')">
+          <div class="ar-dot ${a.status==='warn'?'w':a.status==='crit'?'c':''}"></div>
+          <div class="ar-icon">${a.icon}</div>
+          <div class="ar-info">
+            <div class="ar-name">${a.name}</div>
+            <div class="ar-sub">${a.species} · ${a.tag}</div>
           </div>
-          <button onclick="event.stopPropagation();deleteAnimal('${a.id}','${a.name}')" style="background:none;border:none;color:var(--red);font-size:18px;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0" title="Delete animal">🗑</button>
+          <div class="ar-vitals">
+            <div class="ar-temp">${a.temp.toFixed(1)}°C</div>
+            <div class="ar-hr">${a.hr} bpm</div>
+            <div class="ar-spo2">${a.spo2.toFixed(1)}%</div>
+          </div>
+          <div class="ar-arrow">›</div>
         </div>
       `).join('')}
     </div>
@@ -1512,14 +1631,6 @@ window.toggleAddAnimal=function(){
 };
 
 window.genAnimalTag=function(){
-  // Always use the saved Device ID as the tag code so the ESP32 data matches
-  const savedDevId = userProfile?.deviceId || '';
-  const el = document.getElementById('new-animal-tag');
-  if (savedDevId && savedDevId.length > 6) {
-    if (el) el.value = savedDevId;
-    return;
-  }
-  // No device ID saved yet — generate a random tag
   const allAnimals=getAllAnimals();
   const usedTags=new Set(allAnimals.map(a=>a.tag));
   const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -1532,43 +1643,17 @@ window.genAnimalTag=function(){
     for(let i=0;i<4;i++)tag+=c[Math.floor(Math.random()*c.length)];
     attempts++;
   } while(usedTags.has(tag)&&attempts<1000);
+  const el=document.getElementById('new-animal-tag');
   if(el)el.value=tag;
 };
 
 const SPECIES_ICONS={Cattle:'🐄',Goat:'🐐',Sheep:'🐑',Horse:'🐎',Pig:'🐖'};
 let customAnimals=[];
 
-window.genFarmDevId = function() {
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s='GLA-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
-  s+='-';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
-  const el=document.getElementById('farm-devid-input');
-  if(el) el.value=s;
-};
-
-window.saveFarmDevId = async function() {
-  const id = document.getElementById('farm-devid-input')?.value.trim().toUpperCase();
-  if (!id || id.length < 6) { t('Enter a valid Device ID', 'err'); return; }
-  try {
-    if (!isDemo && auth.currentUser) {
-      await setDoc(doc(db,'farms',auth.currentUser.uid), {deviceId: id}, {merge: true});
-    }
-    userProfile = {...userProfile, deviceId: id};
-    hasDevice = true;
-    t('✅ Device ID saved: ' + id + ' — Now add an animal and the Tag Code will match!', 'ok');
-    renderHerd();
-    renderDashboard();
-    // Auto-fill tag code if add animal form is open
-    const tagEl = document.getElementById('new-animal-tag');
-    if (tagEl) tagEl.value = id;
-  } catch(e) { t('Error saving Device ID', 'err'); }
-};
-
 window.addAnimal=async function(){
   const name=document.getElementById('new-animal-name')?.value.trim();
   const species=document.getElementById('new-animal-species')?.value;
   const tag=document.getElementById('new-animal-tag')?.value.trim().toUpperCase();
-  const devid=document.getElementById('new-animal-devid')?.value.trim().toUpperCase()||'';
   const errEl=document.getElementById('add-animal-err');
   if(errEl)errEl.textContent='';
 
@@ -1577,9 +1662,7 @@ window.addAnimal=async function(){
 
   const all=getAllAnimals();
   if(all.length>=100){if(errEl)errEl.textContent='Maximum 100 animals reached';return;}
-  // Only block duplicate tags if NOT using the shared Device ID
-  const savedDevId = userProfile?.deviceId || '';
-  if(all.some(a=>a.tag===tag) && tag !== savedDevId){
+  if(all.some(a=>a.tag===tag)){
     if(errEl)errEl.textContent='Tag already in use — generate a new one';
     genAnimalTag();
     return;
@@ -1589,7 +1672,6 @@ window.addAnimal=async function(){
   const newAnimal={
     id:'custom-'+Date.now(),
     name,species,tag,
-    deviceId: devid,
     icon:SPECIES_ICONS[species]||'🐄',
     status:'ok',
     temp:+((r.temp[0]+r.temp[1])/2).toFixed(1),
@@ -1616,26 +1698,6 @@ window.addAnimal=async function(){
   // Update pill bar if on dashboard
   const pb=document.getElementById('pill-bar');
   if(pb&&pb.style.display!=='none') buildPillBar();
-};
-
-window.deleteAnimal = async function(id, name) {
-  if (!confirm('Delete ' + name + ' from the herd? This cannot be undone.')) return;
-  try {
-    // Remove from Firestore
-    if (!isDemo && auth.currentUser) {
-      await deleteDoc(doc(db, 'farms', auth.currentUser.uid, 'animals', id));
-    }
-    // Remove from local array
-    customAnimals = customAnimals.filter(a => a.id !== id);
-    liveAnimals = liveAnimals.filter(a => a.id !== id);
-    if (currentAnimal?.id === id) currentAnimal = liveAnimals[0] || null;
-    t('🗑 ' + name + ' removed from herd');
-    renderHerd();
-    renderDashboard();
-  } catch(e) {
-    console.error(e);
-    t('Error deleting animal. Try again.', 'err');
-  }
 };
 
 window.selectAnimalAndGo = function(id) {
@@ -1726,19 +1788,34 @@ function renderSettings() {
       </div>
     </div>
 
-    ${!isDemo ? `
+    ${!isDemo && !hasDevice ? `
     <div class="settings-section">
-      <div class="settings-section-title">Linked Devices</div>
+      <div class="settings-section-title">Link Device</div>
+      <div class="device-form">
+        <div class="device-form-title">Enter the Device Tag ID printed on your GLA ear tag collar sticker.</div>
+        <div class="dev-input-row">
+          <input class="dev-fi" id="dev-input" type="text" placeholder="GLA-XXXX-XXXX">
+          <button class="gen-btn" onclick="genDevId()">GEN</button>
+        </div>
+        <button class="link-btn" onclick="saveDeviceId()">Link Device</button>
+        <div class="emsg show" id="dev-err" style="text-align:center;margin-top:8px"></div>
+      </div>
+    </div>` : ''}
+
+    ${!isDemo && hasDevice ? `
+    <div class="settings-section">
+      <div class="settings-section-title">Linked Device</div>
       <div class="settings-row">
         <div class="sr-icon">📡</div>
         <div class="sr-info">
-          <div class="sr-label">Device IDs are managed per animal</div>
-          <div class="sr-sub">Go to Herd to assign a Device ID to each animal</div>
+          <div class="sr-label">${userProfile?.deviceId||'—'}</div>
+          <div class="sr-sub">GLA Ear Tag Collar</div>
         </div>
+        <div class="sr-badge live">● Active</div>
       </div>
-      <div class="settings-row" style="cursor:pointer" onclick="showView('herd')">
-        <div class="sr-icon">🐄</div>
-        <div class="sr-info"><div class="sr-label" style="color:var(--neon)">Go to Herd →</div></div>
+      <div class="settings-row" style="cursor:pointer" onclick="removeDevice()">
+        <div class="sr-icon">🗑️</div>
+        <div class="sr-info"><div class="sr-label" style="color:var(--red)">Remove Device</div></div>
       </div>
     </div>` : ''}
 
@@ -3081,3 +3158,8 @@ function appendTyping() {
 </script>
 </body>
 </html>
+
+
+
+
+01:06:11.779 -> Looking up userId for: GLA-XGSJ-V75G
